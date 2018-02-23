@@ -1,5 +1,5 @@
 <template>
-  <div class="app flex-row align-items-center">
+  <div class="app flex-row align-items-center login-area">
     <div class="container">
       <b-row class="justify-content-center">
         <b-col md="8">
@@ -73,3 +73,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .login-area {
+    background: linear-gradient(to bottom right, #5894f4, rgb(230, 230, 218));
+  }
+</style>
+

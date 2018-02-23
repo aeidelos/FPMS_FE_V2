@@ -2,7 +2,7 @@
   <div class="app">
     <AppHeader/>
     <div class="app-body">
-      <Sidebar :navItems="nav"/>
+      <Sidebar :navItems="nav" :roles="getUser().roles"/>
       <main class="main">
         <breadcrumb :list="list"/>
         <div class="container-fluid">
@@ -34,6 +34,9 @@ export default {
     this.$store.dispatch('SET_USER', getUsername())
   },
   methods: {
+    getUser () {
+      return this.$store.getters.user
+    }
   },
   data () {
     return {
@@ -50,3 +53,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .main {
+    background: linear-gradient(to bottom right, #5898ff, rgb(253, 203, 37));
+  }
+</style>

@@ -3,7 +3,8 @@ export default {
     {
       name: 'Dashboard',
       url: '/dashboard',
-      icon: 'icon-speedometer'
+      icon: 'icon-speedometer',
+      roles: 'all'
     },
     {
       title: true,
@@ -12,12 +13,14 @@ export default {
       wrapper: {
         element: '',
         attributes: {}
-      }
+      },
+      roles: 'mhs'
     },
     {
-      name: 'Kelasku',
+      name: 'Praktikum',
       icon: 'icon-cursor',
-      url: '/classroom'
+      url: '/classroom/practican',
+      roles: 'mhs'
     },
     {
       title: true,
@@ -26,7 +29,21 @@ export default {
       wrapper: {
         element: '',
         attributes: {}
-      }
+      },
+      roles: 'asprak'
+    },
+    {
+      name: 'Asistensi',
+      icon: 'icon-cursor',
+      url: '/classroom',
+      children: [
+        {
+          name: 'Kelas',
+          icon: 'icon-cursor',
+          url: '/classroom/assistance'
+        }
+      ],
+      roles: 'asprak'
     },
     {
       title: true,
@@ -35,7 +52,28 @@ export default {
       wrapper: {
         element: '',
         attributes: {}
-      }
+      },
+      roles: 'koas'
+    },
+    {
+      name: 'Koordinator',
+      icon: 'icon-cursor',
+      url: '/coordinator',
+      children: [
+        {
+          name: 'Tugas & Kegiatan',
+          icon: 'icon-cursor',
+          url: '/task/coordinator',
+          roles: 'koas'
+        },
+        {
+          name: 'Kelas',
+          icon: 'icon-cursor',
+          url: '/classroom/coordinator',
+          roles: 'koas'
+        }
+      ],
+      roles: 'koas'
     },
     {
       title: true,
@@ -44,27 +82,32 @@ export default {
       wrapper: {
         element: '',
         attributes: {}
-      }
+      },
+      roles: 'kalab'
     },
     {
       name: 'Laboratorium',
       icon: 'icon-cursor',
       url: '/laboratory',
+      roles: 'kalab',
       children: [
         {
           name: 'Praktikum',
           icon: 'icon-cursor',
-          url: '/laboratory/practicum'
+          url: '/laboratory/practicum',
+          roles: 'kalab'
         },
         {
           name: 'Mata Kuliah',
           icon: 'icon-cursor',
-          url: '/laboratory/course'
+          url: '/laboratory/course',
+          roles: 'kalab'
         },
         {
           name: 'Laporan',
           icon: 'icon-cursor',
-          url: '/laboratory/report'
+          url: '/laboratory/report',
+          roles: 'kalab'
         }
       ]
     }

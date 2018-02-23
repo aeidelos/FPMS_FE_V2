@@ -16,6 +16,10 @@ export function deletePracticum (practicum) {
   return request('delete', 'practicum/' + practicum.id + '')
 }
 
-export function fetchCandidateAssistance (search) {
+export function fetchCandidateCoordinator (search) {
   return request('get', 'user/search/coordinator/' + search)
+}
+
+export function getPracticumByCoordinatorAssistance (coordinator) {
+  return request('get', 'practicum/coordinator/' + coordinator)
 }

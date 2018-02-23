@@ -42,7 +42,7 @@
                         <div v-else-if="editCoordinator=='on'">
                             <div class="form-group">
                               <label for="candidateKoas">Nama Koordinator Asisten</label>
-                              <v-select 
+                              <div><v-select
                                 id="practicumName"
                                 label="label"
                                 :debounce="250"
@@ -50,8 +50,7 @@
                                 v-model="temp.selectedCoordinator"
                                 :options="getRefreshCandidate"
                                 placeholder="Cari Koas"
-                              ></v-select>
-                              <button class="btn btn-primary btn-sm" v-on:click="getValueCoordinator">Set</button>
+                              ></v-select> <button class="btn btn-primary btn-sm pull-right" v-on:click="getValueCoordinator">Set</button></div>
                             </div>
                         </div>
                         <small v-if="editCoordinator == 'on'" class="form-text text-muted">Pilih koordinator asisten</small>
@@ -72,7 +71,7 @@
 <script>
   import { getAllCourses as getAllCoursesAPI } from '@/api/course'
   import { addPracticum as addPracticumAPI, deletePracticum as deletePracticumAPI,
-    updatePracticum as updatePracticumAPI, fetchCandidateAssistance as fetchCandidateAssistanceAPI } from '@/api/practicum'
+    updatePracticum as updatePracticumAPI, fetchCandidateCoordinator as fetchCandidateCoordinatorAPI } from '@/api/practicum'
   import { warningAlert, successAlert } from '@/utils/alert'
   import { addValidate } from '@/validation/practicum'
   export default {
@@ -172,7 +171,7 @@
       },
       getCandidateKoas (search, loading) {
         loading(true)
-        fetchCandidateAssistanceAPI(search).then(resp => {
+        fetchCandidateCoordinatorAPI(search).then(resp => {
           this.temp.candidateKoas = resp.object.users.map(v => {
             var option = {}
             option.value = v

@@ -6,11 +6,16 @@ import Full from '@/containers/Full'
 
 // Views
 import Dashboard from '@/views/Dashboard'
-import Classroom from '@/views/classroom'
 import Login from '@/views/public/Login'
 
 import ListCourse from '@/views/course'
 import Practicum from '@/views/practicum'
+
+import ClassroomCoordinator from '@/views/classroom/coordinator'
+import ClassroomPractican from '@/views/classroom/practican'
+import ClassroomAssistance from '@/views/classroom/assistance'
+
+import TaskCoordinator from '@/views/task/practicum'
 
 Vue.use(Router)
 
@@ -55,9 +60,31 @@ export default new Router({
       component: Full,
       children: [
         {
-          path: '',
-          name: 'ClassroomManagement',
-          component: Classroom
+          path: 'coordinator',
+          name: 'Coordinator',
+          component: ClassroomCoordinator
+        },
+        {
+          path: 'practican',
+          name: 'Practican',
+          component: ClassroomPractican
+        },
+        {
+          path: 'assistance',
+          name: 'Assistance',
+          component: ClassroomAssistance
+        }
+      ]
+    },
+    {
+      path: '/task',
+      name: 'Task',
+      component: Full,
+      children: [
+        {
+          path: 'coordinator',
+          name: 'Coordinator',
+          component: TaskCoordinator
         }
       ]
     },

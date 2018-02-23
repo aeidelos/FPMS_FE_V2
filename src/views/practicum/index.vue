@@ -5,7 +5,7 @@
                 <div class="card-header">
                     <div>
                         <div>
-                            <button v-on:click='switchAddingPracticum' class="btn btn-primary pull-right">Tambah Baru</button>
+                            <button v-on:click='switchAddingPracticum' class="btn btn-primary pull-right"><i class="fa fa-plus"></i>Tambah Baru</button>
                         </div>
                     </div>
                 </div>
@@ -46,8 +46,8 @@
                                         <td aria-colindex="2" class="">{{ practicum.name }}</td>
                                         <td aria-colindex="3" class="" v-if="practicum.coordinatorAssistance==null">Belum ada Koordinator Asisten</td>
                                         <td aria-colindex="3" class="" v-else-if="practicum.coordinatorAssistance!=null">{{ practicum.coordinatorAssistance.name }}</td>
-                                        <td aria-colindex="4" class=""><button v-on:click="editPracticum(practicum)" class="btn">Sunting</button></td>
-                                        <td aria-colindex="5" class=""><button v-on:click="deletePracticum(practicum)" class="btn btn-danger">Hapus</button></td>
+                                        <td aria-colindex="4" class=""><button v-on:click="editPracticum(practicum)" class="btn"><i class="fa fa-edit"></i>Sunting</button></td>
+                                        <td aria-colindex="5" class=""><button v-on:click="deletePracticum(practicum)" class="btn btn-danger"><i class="fa fa-trash"></i>Hapus</button></td>
                                     </tr>
                                     <!---->
                                     <!---->
