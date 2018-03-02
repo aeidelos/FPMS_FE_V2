@@ -14,21 +14,24 @@
                 <div role="group" class="b-form-group form-group">
                     <div class="form-row"><label for="horizPass" class="col-sm-3 col-form-label">Judul Tugas</label>
                         <div class="col-sm-9">
-                        <input v-model="task.title" type="text" placeholder="Judul tugas.." class="form-control">
+                        <input v-if="mode=='delete'" v-model="task.title" type="text" placeholder="Judul tugas.." disabled class="form-control">
+                        <input v-else v-model="task.title" type="text" placeholder="Judul tugas.." class="form-control">
                         <!----><small class="form-text text-muted">Masukkan Judul Tugas</small></div>
                     </div>
                 </div>
                 <div role="group" class="b-form-group form-group">
                     <div class="form-row"><label for="horizPass" class="col-sm-3 col-form-label">Deskripsi Tugas</label>
                         <div class="col-sm-9">
-                        <wysiwyg v-model="task.description" />
+                        <div v-if="mode=='delete'"><p v-html="task.description"></p></div>
+                        <div v-else><wysiwyg v-model="task.description" /></div>
                         <!----><small class="form-text text-muted">Deskripsikan Detail Tugas Serinci Mungkin</small></div>
                     </div>
                 </div>
                 <div role="group" class="b-form-group form-group">
                     <div class="form-row"><label for="horizPass" class="col-sm-3 col-form-label">Waktu Pengerjaan</label>
                         <div class="col-sm-9">
-                        <date-picker v-on:confirm="assignmentDatePicker()" v-model="temp.selectedDate" lang="en" range type="datetime" 
+                        <div v-if="mode=='delete'"> <p>Mulai : {{ task.createdDate }} - Selesai : {{ task.dueDate }}</p> </div>
+                        <date-picker v-else v-on:confirm="assignmentDatePicker()" v-model="temp.selectedDate" lang="en" range type="datetime" 
                         format="yyyy-MM-dd" confirm></date-picker>
                         <!----><small class="form-text text-muted">Batas Mulai Sampai Selesai</small></div>
                     </div>
@@ -36,27 +39,33 @@
                 <div role="group" class="b-form-group form-group">
                     <div class="form-row"><label for="horizPass" class="col-sm-3 col-form-label">Keterlambatan</label>
                         <div class="col-sm-9">
-                        <label class="switch switch-text switch-primary">
-                            <input type="checkbox" class="switch-input" checked v-model="task.allowLate">
-                            <span class="switch-label" data-on="Ya" data-off="Tdk"></span>
-                            <span class="switch-handle"></span>
-                        </label>
+                        <div v-if="mode=='delete'">
+                            <p v-if="task.allowLate">Ya</p>
+                            <p v-else>Tidak</p>
+                        </div>
+                        <div v-else>
+                            <label class="switch switch-text switch-primary">
+                                <input type="checkbox" class="switch-input" checked v-model="task.allowLate">
+                                <span class="switch-label" data-on="Ya" data-off="Tdk"></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
                         <!----><small class="form-text text-muted">Perbolehkan Pengumpulan Seusai Keterlambatan Peserta</small></div>
                     </div>
                 </div>
                 <div role="group" class="b-form-group form-group">
                     <div class="form-row"><label for="horizPass" class="col-sm-3 col-form-label">Laman Pengerjaan</label>
-                        <div class="col-sm-3">
+                        <div class="col-sm-3" v-if="mode!='delete'">
                             <input type="text" placeholder="Judul lampiran.." class="form-control" v-model="temp.assignment.description">
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-3" v-if="mode!='delete'">
                             <select name="" id="" class="form-control" v-model="temp.assignment.fileAllowed">
                                 <option value="document">Dokumen (.doc/.docx/.pdf)</option>
                                 <option value="sourcecode">Kode Program (.java/.php/.py)</option>
                                 <option value="text">Input Manual (Form Pengisian Tambahan)</option>
                             </select>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-2" v-if="mode!='delete'">
                             <button v-on:click="addTemporaryAssignment()" class="btn btn-primary"><i class="fa fa-plus"></i></button>
                         </div>
                     </div>
@@ -76,17 +85,17 @@
                                 <i v-else-if="assignment.fileAllowed=='text'" >text editor</i>
                             </span>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-2" v-if="mode!='delete'">
                             <button v-on:click="removeTemporaryAssignment(index)" class="btn btn-danger btn-sm"><i class="fa fa-close"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <div><button v-if="mode == 'add'" v-on:click="addTask" type="submit" class="btn btn-success btn-sm"><i class="fa fa-plus-square"></i> Tambahkan</button>
-                <button v-if="mode == 'edit'"  type="submit"  class="btn btn-success btn-sm"><i class="fa fa-save"></i> Simpan</button>
-                <button v-if="mode == 'delete'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-minus-circle"></i> Hapus</button>
-                <button class="btn btn-sm" ><i class="fa fa-ban"></i> Batal</button></div>
+                <div><button v-if="mode == 'add'" v-on:click="addTask" class="btn btn-success btn-sm"><i class="fa fa-plus-square"></i> Tambahkan</button>
+                <button v-if="mode == 'edit'" v-on:click="updateTask" class="btn btn-success btn-sm"><i class="fa fa-save"></i> Simpan</button>
+                <button v-if="mode == 'delete'" v-on:click="deleteTask" class="btn btn-danger btn-sm"><i class="fa fa-minus-circle"></i> Hapus</button>
+                <button v-on:click="closeDiv" class="btn btn-sm" ><i class="fa fa-ban"></i> Batal</button></div>
             </div>
         </div>
     </div>
@@ -94,7 +103,8 @@
 
 <script>
   import moment from 'moment'
-  import { addTask as addTaskAPI } from '@/api/task'
+  import { addTask as addTaskAPI, updateTask as updateTaskAPI, deleteTask as deleteTaskAPI } from '@/api/task'
+  import { successAlert } from '@/utils/alert'
   export default {
     name: 'editable-task',
     component: {
@@ -111,7 +121,9 @@
     },
     mounted () {
       if (this.selectedTask != null) {
-        this.task = this.selectedTask
+        this.task = Object.assign({}, this.selectedTask)
+        this.temp.selectedDate[0] = moment(this.selectedTask.createdDate).toDate()
+        this.temp.selectedDate[1] = moment(this.selectedTask.dueDate).toDate()
       }
     },
     computed: {
@@ -131,11 +143,16 @@
           allowLate: false
         },
         temp: {
-          selectedDate: '',
+          selectedDate: [null, null],
           assignment: {
             fileAllowed: '',
             description: ''
           }
+        },
+        emitter: {
+          mode: '',
+          task: {},
+          category: ''
         }
       }
     },
@@ -155,15 +172,55 @@
       addTask () {
         // required validation (to be implemented)
         this.task.practicum = this.practicum
+        this.task.classroom = this.classroom
         this.task.createdBy = this.$store.getters.user
         addTaskAPI(this.task)
           .then(response => {
-
+            if (response.response === 1) {
+              successAlert('Tugas berhasil ditambahkan')
+              this.emitter.mode = 'add'
+              this.emitter.task = response.object.task
+              this.emitter.category = response.object.category
+              this.$emit('changelist', this.emitter)
+              this.$emit('closediv')
+            }
           })
+      },
+      updateTask () {
+        // required validation (to be implemented)
+        updateTaskAPI(this.task)
+          .then(response => {
+            if (response.response === 1) {
+              successAlert('Tugas berhasil diubah')
+              this.emitter.mode = 'update'
+              this.emitter.task = response.object.task
+              this.emitter.category = response.object.category
+              this.$emit('changelist', this.emitter)
+              this.$emit('closediv')
+            }
+          })
+      },
+      deleteTask () {
+        deleteTaskAPI(this.task)
+          .then(response => {
+            if (response.response === 1) {
+              successAlert('Tugas berhasil dihapus')
+              this.emitter.mode = 'delete'
+              this.emitter.task = this.task
+              this.$emit('changelist', this.emitter)
+              this.$emit('closediv')
+            }
+          })
+      },
+      closeDiv () {
+        this.$emit('closediv')
       }
     },
     destroyed () {
       this.task = {}
+      this.temp = {}
+      this.emitter = {}
+      this.selectedTask = {}
     }
   }
 </script>

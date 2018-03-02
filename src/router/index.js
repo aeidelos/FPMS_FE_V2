@@ -16,6 +16,7 @@ import ClassroomPractican from '@/views/classroom/practican'
 import ClassroomAssistance from '@/views/classroom/assistance'
 
 import TaskCoordinator from '@/views/task/practicum'
+import TaskClassroom from '@/views/task/classroom'
 
 Vue.use(Router)
 
@@ -83,8 +84,14 @@ export default new Router({
       children: [
         {
           path: 'coordinator',
-          name: 'Coordinator',
+          name: 'CoordinatorTask',
           component: TaskCoordinator
+        },
+        {
+          path: 'classroom',
+          name: 'ClassroomTask',
+          component: TaskClassroom,
+          props: true
         }
       ]
     },

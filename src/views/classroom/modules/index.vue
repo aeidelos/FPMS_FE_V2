@@ -10,7 +10,6 @@
                     </div>
                 </div>
                 <div>
-
                 </div>
                 <div class="card-body">
                     <div v-if="switcher.editableClassroom == 'on'">
@@ -55,7 +54,7 @@
                                     <span>Dosen Pengampu : </span> to be implemented
                                   </div>
                                   <br>
-                                  <button class="btn btn-md btn-success btn-block">Tugas & Laporan</button>
+                                  <button class="btn btn-md btn-success btn-block" v-on:click="switchToNextRouteClassroom(classroom)">Tugas & Laporan</button>
                                 </div>
                               </div>
                               <br>
@@ -105,6 +104,9 @@ export default {
     }
   },
   methods: {
+    switchToNextRouteClassroom (classroom) {
+      this.$router.push({name: 'ClassroomTask', params: {classroom}})
+    },
     switchEditableClassroom () {
       if (this.switcher.editableClassroom === 'off') {
         this.switcher.editableClassroom = 'on'

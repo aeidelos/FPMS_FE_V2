@@ -29,9 +29,9 @@ export function getAllTaskByPracticanPast (practicanId) {
 }
 
 export function getAllTaskByClassroom (classroomId) {
-  return request('get', 'task/practicum/' + classroomId + '/current')
+  return request('get', 'task/mix/' + classroomId + '/current')
 }
 
 export function getAllTaskByClassroomPast (classroomId) {
-  return request('get', 'task/practicum/' + classroomId + '/current')
+  return request('get', 'task/mix/' + classroomId + '/past')
 }
