@@ -3,6 +3,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import router from '@/router/index'
 import { setToken, getToken, setUsername } from '@/utils/auth'
+import { warningAlert, successAlert } from '@/utils/alert'
 
 Vue.use(axios, VueAxios)
 
@@ -19,7 +20,7 @@ const Header = {
   'Authorization': 'Bearer ' + getToken()
 }
 
-export function request (method, url, data) {
+export function request (method, url, data, onSuccess, onFailed) {
   return Vue.axios({
     withCredentials: true,
     method: method,
@@ -28,11 +29,14 @@ export function request (method, url, data) {
     data: data
   })
     .then(
-      response => response.data
+      response => {
+        if (onSuccess !== undefined && onSuccess !== null) successAlert(onSuccess)
+        return response.data
+      }
     )
-    .catch((error, response) => {
+    .catch((error) => {
+      warningAlert(onFailed)
       console.log(error)
-      console.log(response)
     }
     )
 }
@@ -54,16 +58,20 @@ function auth (username, password) {
         if (response.status === 200) {
           setUsername(username)
           setToken(response.data.access_token, response.data.expires_in)
-          router.go('/dashboard')
+          successAlert('Login berhasil')
+            .then(result => {
+              if (result.value) {
+                router.go('/dashboard')
+              }
+            })
         } else {
-          return null
+          // unhandled event
         }
       }
     )
-    .catch((error, response) => {
-      console.log(error)
-      console.log(response)
-      return null
-    }
+    .catch(
+      (response) => {
+        warningAlert('Authentikasi Gagal')
+      }
     )
 }

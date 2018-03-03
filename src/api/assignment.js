@@ -5,5 +5,5 @@ export function getAssignmentInformation (assignment, user) {
 }
 
 export function uploadAssignment (assignment, user, form) {
-  return request('post', 'assignment/p/' + assignment.id + '/' + user.id, form)
+  return request('post', 'assignment/p/' + assignment.id + '/' + user.id, form, 'File berhasil disimpan', 'Gagal mengupload file')
 }

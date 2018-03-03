@@ -10,15 +10,24 @@
 </template>
 <script>
   import { destroyCookies } from '@/utils/auth'
+  import { confirmationAlert, successAlert } from '@/utils/alert'
+  import router from '@/router/index'
   export default {
     name: 'header-dropdown',
     data: () => {
       return { itemsCount: 42 }
     },
     methods: {
-      logout: function () {
-        destroyCookies()
-        this.$router.push('/public')
+      logout () {
+        confirmationAlert('Logout', 'Apakah anda yakin keluar dari sistem?',
+          function (e) {
+            successAlert('Logout berhasil')
+              .then(e => {
+                destroyCookies()
+                router.push('/public/login')
+              })
+          }
+        )
       }
     }
   }
