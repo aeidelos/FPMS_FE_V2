@@ -1,7 +1,7 @@
 <template>
     <div class="animated fadeIn">
         <div class="col-sm-12 col-md-12 col-lg-12">
-            <div class="card border">
+            <div class="card border" style="min-height:450px;">
                 <div class="card-body">
                       <button class="btn btn-primary pull-right" v-on:click="switchAddTask"><i class="fa fa-plus"></i>Tambah Baru</button>
                     <br><br><br>
@@ -21,7 +21,7 @@
                     </li>
                     </ul>
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body" style="min-height:300px;">
                             <div v-if="getActiveTasks.length>0" v-for="task in getActiveTasks" class="card">
                                 <div class="card-body">
                                     <div class="row" style="margin:20px">
@@ -77,11 +77,13 @@
                                     <div class="row">
                                       <div class="col-sm-12">
                                         <div v-for="assignment in task.assignments">
-                                          <uploader-task v-bind:assignment="assignment" v-bind:practican="getActiveUser" v-if="task.id == switcher.viewUpload"></uploader-task>
+                                          <uploader-task v-bind:assignment="assignment" 
+                                          v-bind:practican="getActiveUser" v-if="task.id == switcher.viewUpload"
+                                          v-on:viewDocument="viewDocument"></uploader-task>
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="margin-bottom:30px;">
                                       <div class="col-sm-12">
                                         <div v-if="task.id != switcher.viewUpload">
                                            <button class="btn btn-primary pull-right">Lihat Pengumpulan</button>
@@ -90,6 +92,19 @@
                                         <div v-else>
                                             <button class="btn btn-warning pull-right" v-on:click="viewUpload(null)">Tutup</button>
                                         </div>
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-md-12 col-sm-12">
+                                        <corrector-list v-bind:task="task"></corrector-list>
+                                      </div>
+                                    </div>
+                                    <div class="row" v-if="switcher.viewer == 'on'">
+                                      <div class="col-md-12 col-sm-12">
+                                         <document-viewer v-if="activeViewer.data.assignment.fileAllowed == 'document'" v-bind:document="activeViewer.data"
+                                      v-on:closeViewer="closeViewer"></document-viewer>
+                                         <code-viewer v-if="activeViewer.data.assignment.fileAllowed == 'sourcecode'" v-bind:document="activeViewer.data"
+                                      v-on:closeViewer="closeViewer"></code-viewer>
                                       </div>
                                     </div>
                                 </div>
@@ -105,11 +120,18 @@
 <script>
 import EditableTask from './EditableTask'
 import UploaderTask from './../upload'
+import CodeViewer from './../viewer/CodeViewer'
+import DocumentViewer from './../viewer/DocumentViewer'
+import { getDocumentByClassroom } from '@/api/assignment'
+import CorrectorList from './../corrector'
 export default {
   name: 'list-task',
   components: {
     EditableTask,
-    UploaderTask
+    UploaderTask,
+    CodeViewer,
+    DocumentViewer,
+    CorrectorList
   },
   props: {
     tasks: {
@@ -134,6 +156,8 @@ export default {
     }
   },
   mounted () {
+    getDocumentByClassroom(this.task.past[0], this.classroom)
+      .then(response => console.log(response))
   },
   data () {
     return {
@@ -141,16 +165,29 @@ export default {
       switcher: {
         editableTask: 'off',
         editableMode: 'add',
-        viewUpload: null
+        viewUpload: null,
+        viewer: 'off'
       },
       activeLink: {
         current: true,
         past: false
       },
+      activeViewer: {
+        data: {},
+        type: {}
+      },
       selectedTask: null
     }
   },
   methods: {
+    viewDocument (document) {
+      this.activeViewer.data = document
+      this.switcher.viewer = 'on'
+    },
+    closeViewer () {
+      this.activeViewer.data = {}
+      this.switcher.viewer = 'off'
+    },
     viewUpload (task) {
       this.switcher.viewUpload = task == null ? null : task.id
     },

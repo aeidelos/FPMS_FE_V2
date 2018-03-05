@@ -1,7 +1,7 @@
 <template>
     <div class="animated fadeIn">
         <div class="col-sm-12 col-md-12 col-lg-12">
-            <div class="card border">
+            <div class="card border" style="min-height:450px;">
                 <div class="card-header">
                     <div>
                         <div>

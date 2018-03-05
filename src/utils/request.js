@@ -41,6 +41,28 @@ export function request (method, url, data, onSuccess, onFailed) {
     )
 }
 
+export function requestDownload (url, data, onSuccess, onFailed) {
+  return Vue.axios({
+    withCredentials: true,
+    method: 'get',
+    url: BaseURL + url,
+    headers: Header,
+    data: data,
+    responseType: 'arraybuffer'
+  })
+    .then(
+      response => {
+        if (onSuccess !== undefined && onSuccess !== null) successAlert(onSuccess)
+        return response.data
+      }
+    )
+    .catch((error) => {
+      warningAlert(onFailed)
+      console.log(error)
+    }
+    )
+}
+
 export function authentication (username, password) {
   return auth(username, password)
 }

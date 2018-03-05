@@ -16,12 +16,12 @@
                           <div v-else>
                             <p>Dokumen terunggah : {{ document.filename }}</p>
                             <button class="btn btn-primary" v-on:click="switcher.upload = 'on'">Ubah</button>
-                            <button class="btn btn-success" v-on:click="">Lihat</button>
+                            <button class="btn btn-success" v-on:click="fileView">Lihat</button>
                           </div>
                         </div>
                         <div class="row">
                           <div v-if="switcher.view == 'on'">
-                            <codeview></codeview>
+                            
                           </div>
                         </div>
                       </div>
@@ -43,11 +43,9 @@
   import { getAssignmentInformation as getAssignmentInformationAPI,
     uploadAssignment as uploadAssignmentAPI } from '@/api/assignment'
   import { warningAlert } from '@/utils/alert'
-  import CodeView from './../view/CodeView'
   export default {
     name: 'upload-task',
     component: {
-      CodeView
     },
     props: {
       assignment: {
@@ -97,6 +95,9 @@
       }
     },
     methods: {
+      fileView () {
+        this.$emit('viewDocument', this.document)
+      },
       fileChange (event) {
         this.file = event.target.files[0]
       },

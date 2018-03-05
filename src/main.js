@@ -11,7 +11,9 @@ import VueAlertify from 'vue-alertify'
 import vSelect from 'vue-select'
 import wysiwyg from 'vue-wysiwyg'
 import DatePicker from 'vue2-datepicker'
+import VueHighlightJS from 'vue-highlightjs'
 
+Vue.use(VueHighlightJS)
 Vue.use(VueAxios, axios, VueAlertify)
 Vue.use(BootstrapVue)
 Vue.use(wysiwyg, {})
