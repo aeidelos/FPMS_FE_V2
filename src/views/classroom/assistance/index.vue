@@ -18,8 +18,8 @@ export default {
     var userid = getUser()
     getAllClassroomByAssistanceAPI(userid)
       .then(response => {
-        if (response.response === 1) {
-          this.classrooms = response.object.classrooms
+        if (response.status === 200) {
+          this.classrooms = response.data
         }
       })
   },

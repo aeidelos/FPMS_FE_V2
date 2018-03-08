@@ -5,12 +5,10 @@
                 <div class="card-body">
                       <button class="btn btn-primary pull-right" v-on:click="switchAddTask"><i class="fa fa-plus"></i>Tambah Baru</button>
                     <br><br><br>
-                    <div class="card" v-if="switcher.editableTask == 'on'">
-                      <div class="card-body">
+                    <div v-if="switcher.editableTask == 'on'">
                         <editable-task v-bind:practicum="practicum" v-bind:classroom="classroom" v-bind:mode="switcher.editableMode"
                         v-bind:selectedTask="selectedTask" v-on:closediv="switchEditableTask"
                         v-on:changelist="updateList"></editable-task>
-                      </div>
                     </div>
                     <ul class="nav nav-tabs">
                     <li class="nav-item">
@@ -79,32 +77,31 @@
                                         <div v-for="assignment in task.assignments">
                                           <uploader-task v-bind:assignment="assignment" 
                                           v-bind:practican="getActiveUser" v-if="task.id == switcher.viewUpload"
-                                          v-on:viewDocument="viewDocument"></uploader-task>
+                                          v-on:viewDocument="viewDocument" v-on:closeViewer="viewUpload(null)"
+                                          ></uploader-task>
                                         </div>
                                       </div>
                                     </div>
                                     <div class="row" style="margin-bottom:30px;">
                                       <div class="col-sm-12">
                                         <div v-if="task.id != switcher.viewUpload">
-                                           <button class="btn btn-primary pull-right">Lihat Pengumpulan</button>
+                                           <button class="btn btn-primary pull-right" v-on:click="switcher.corrector = 'on'">Lihat Pengumpulan</button>
                                            <button class="btn btn-success pull-right" v-on:click="viewUpload(task)">Unggah Pengerjaan</button>
-                                        </div>
-                                        <div v-else>
-                                            <button class="btn btn-warning pull-right" v-on:click="viewUpload(null)">Tutup</button>
                                         </div>
                                       </div>
                                     </div>
                                     <div class="row">
                                       <div class="col-md-12 col-sm-12">
-                                        <corrector-list v-bind:task="task"></corrector-list>
+                                        <corrector-list v-if="switcher.corrector == 'on'" 
+                                        v-bind:task="task" v-on:closeViewer="closeViewer('corrector')"></corrector-list>
                                       </div>
                                     </div>
                                     <div class="row" v-if="switcher.viewer == 'on'">
                                       <div class="col-md-12 col-sm-12">
-                                         <document-viewer v-if="activeViewer.data.assignment.fileAllowed == 'document'" v-bind:document="activeViewer.data"
-                                      v-on:closeViewer="closeViewer"></document-viewer>
-                                         <code-viewer v-if="activeViewer.data.assignment.fileAllowed == 'sourcecode'" v-bind:document="activeViewer.data"
-                                      v-on:closeViewer="closeViewer"></code-viewer>
+                                         <document-viewer v-if="activeViewer.data[0].assignment.fileAllowed == 'document'" v-bind:document="activeViewer.data"
+                                      v-on:closeViewer="closeViewer('viewer')"></document-viewer>
+                                         <code-viewer v-if="activeViewer.data[0].assignment.fileAllowed == 'sourcecode'" v-bind:document="activeViewer.data"
+                                      v-on:closeViewer="closeViewer('viewer')"></code-viewer>
                                       </div>
                                     </div>
                                 </div>
@@ -122,7 +119,6 @@ import EditableTask from './EditableTask'
 import UploaderTask from './../upload'
 import CodeViewer from './../viewer/CodeViewer'
 import DocumentViewer from './../viewer/DocumentViewer'
-import { getDocumentByClassroom } from '@/api/assignment'
 import CorrectorList from './../corrector'
 export default {
   name: 'list-task',
@@ -156,8 +152,6 @@ export default {
     }
   },
   mounted () {
-    getDocumentByClassroom(this.task.past[0], this.classroom)
-      .then(response => console.log(response))
   },
   data () {
     return {
@@ -166,7 +160,8 @@ export default {
         editableTask: 'off',
         editableMode: 'add',
         viewUpload: null,
-        viewer: 'off'
+        viewer: 'off',
+        corrector: 'off'
       },
       activeLink: {
         current: true,
@@ -184,9 +179,10 @@ export default {
       this.activeViewer.data = document
       this.switcher.viewer = 'on'
     },
-    closeViewer () {
+    closeViewer (type) {
       this.activeViewer.data = {}
-      this.switcher.viewer = 'off'
+      if (type === 'viewer') this.switcher.viewer = 'off'
+      if (type === 'corrector') this.switcher.corrector = 'off'
     },
     viewUpload (task) {
       this.switcher.viewUpload = task == null ? null : task.id

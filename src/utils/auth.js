@@ -1,5 +1,4 @@
 import Cookies from 'js-cookie'
-
 const TokenKey = 'TokenKey'
 const UserId = 'UserId'
 

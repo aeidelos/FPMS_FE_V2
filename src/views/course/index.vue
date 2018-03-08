@@ -103,7 +103,7 @@ export default {
       }
     },
     getCourses: function () {
-      getAllCourses().then(response => { this.courses = response.object.courses.content })
+      getAllCourses().then(response => { this.courses = response.data.content })
     },
     switchEditableCourse: function () {
       if (this.switcher.editableCourse === 'off') {
@@ -124,18 +124,7 @@ export default {
       }
     },
     updateCourseList: function (args) {
-      if (args.mode === 'add') {
-        this.courses.push(args.course)
-      } else {
-        var coursetemp = this.courses.filter(function (item) {
-          return item.id !== args.course.id
-        })
-        if (args.mode === 'update') {
-          coursetemp.push(args.course)
-        }
-        console.log(coursetemp)
-        this.courses = Object.assign({}, coursetemp)
-      }
+      this.getCourses()
     }
   }
 }

@@ -19,15 +19,15 @@ export default {
     var userid = getUser()
     getPracticumByCoordinatorAssistanceAPI(userid)
       .then(response => {
-        if (response.response === 1) {
-          this.practicum = response.object.practicum
-          getAllTaskByPracticumAPI(response.object.practicum.id)
+        if (response.status === 200) {
+          this.practicum = response.data
+          getAllTaskByPracticumAPI(response.data.id)
             .then(response => {
-              this.tasks.current = response.object.tasks
+              this.tasks.current = response.data
             })
-          getAllTaskByPracticumPastAPI(response.object.practicum.id)
+          getAllTaskByPracticumPastAPI(response.data.id)
             .then(response => {
-              this.tasks.past = response.object.tasks
+              this.tasks.past = response.data
             })
         }
       })

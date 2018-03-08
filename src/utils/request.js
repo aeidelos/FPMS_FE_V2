@@ -14,10 +14,33 @@ const ApplicationAuth = {
   password: 'rma'
 }
 
+var token = null
+
 let Development = true
 
-const Header = {
-  'Authorization': 'Bearer ' + getToken()
+function getTokenLocal () {
+  return token === null ? getToken() : token
+}
+
+export function requestAPI (method, url, data, onSuccess, onFailed) {
+  return Vue.axios({
+    withCredentials: true,
+    method: method,
+    url: BaseURL + url,
+    headers: { 'Authorization': 'Bearer ' + getTokenLocal() },
+    data: data
+  })
+    .then(
+      response => {
+        if (onSuccess !== undefined && onSuccess !== null) successAlert(onSuccess)
+        return response
+      }
+    )
+    .catch((error) => {
+      if (onFailed !== undefined && onSuccess !== null) warningAlert(onFailed)
+      console.log(error)
+    }
+    )
 }
 
 export function request (method, url, data, onSuccess, onFailed) {
@@ -25,7 +48,7 @@ export function request (method, url, data, onSuccess, onFailed) {
     withCredentials: true,
     method: method,
     url: BaseURL + url,
-    headers: Header,
+    headers: { 'Authorization': 'Bearer ' + getTokenLocal() },
     data: data
   })
     .then(
@@ -46,14 +69,14 @@ export function requestDownload (url, data, onSuccess, onFailed) {
     withCredentials: true,
     method: 'get',
     url: BaseURL + url,
-    headers: Header,
+    headers: { 'Authorization': 'Bearer ' + getTokenLocal() },
     data: data,
     responseType: 'arraybuffer'
   })
     .then(
       response => {
         if (onSuccess !== undefined && onSuccess !== null) successAlert(onSuccess)
-        return response.data
+        return response
       }
     )
     .catch((error) => {
@@ -80,10 +103,12 @@ function auth (username, password) {
         if (response.status === 200) {
           setUsername(username)
           setToken(response.data.access_token, response.data.expires_in)
+          token = response.data.access_token
+          console.log(token)
           successAlert('Login berhasil')
             .then(result => {
               if (result.value) {
-                router.go('/dashboard')
+                router.push('/dashboard')
               }
             })
         } else {

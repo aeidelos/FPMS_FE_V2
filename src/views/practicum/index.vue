@@ -108,20 +108,10 @@ export default {
       }
     },
     getAllPracticum: function () {
-      getAllPracticumAPI().then(response => { this.practicums = response.object.practicums.content })
+      getAllPracticumAPI().then(response => { this.practicums = response.data.content })
     },
     updateListPracticum: function (args) {
-      if (args.mode === 'add') {
-        this.practicums.push(args.practicum)
-      } else {
-        var practicumtemp = this.practicums.filter(function (item) {
-          return item.id !== args.practicum.id
-        })
-        if (args.mode === 'update') {
-          practicumtemp.push(args.practicum)
-        }
-        this.practicums = Object.assign({}, practicumtemp)
-      }
+      this.getAllPracticum()
     }
   }
 }

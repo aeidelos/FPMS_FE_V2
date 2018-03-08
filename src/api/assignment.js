@@ -1,4 +1,4 @@
-import { request, requestDownload } from '@/utils/request'
+import { requestAPI as request, requestDownload } from '@/utils/request'
 
 export function getAssignmentInformation (assignment, user) {
   return request('get', 'file/information/' + assignment.id + '/' + user.id)
@@ -18,4 +18,8 @@ export function getDocumentByClassroom (task, classroom) {
   } else {
     return request('get', '/assignment/classroom/' + task.id + '/' + classroom.id)
   }
+}
+
+export function runCode (document) {
+  return request('get', 'file/compile/' + document.id)
 }

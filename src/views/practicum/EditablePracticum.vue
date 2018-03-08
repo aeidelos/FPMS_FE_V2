@@ -1,5 +1,7 @@
 <template>
-    <div class="animated fadeIn fadeOut">
+    <div class="fadein">
+      <b-modal title="Modal title" hide-footer size="lg" v-model="modal" 
+      hide-header no-close-on-backdrop no-close-on-esc>
         <div class="card">
             <div class="card-header">
                 <div v-if="mode=='add'"><strong>Tambah Praktium Baru</strong>
@@ -65,6 +67,7 @@
                 <button class="btn btn-sm" v-on:click="switchCloseDiv"><i class="fa fa-ban"></i> Batal</button></div>
             </div>
         </div>
+      </b-modal>
     </div>
 </template>
 
@@ -126,10 +129,7 @@
           candidateKoas: [],
           selectedCoordinator: null
         },
-        emitter: {
-          mode: '',
-          practicum: {}
-        }
+        modal: true
       }
     },
     methods: {
@@ -137,11 +137,9 @@
         if (addValidate(this.temp.actualPracticum.name, this.temp.actualPracticum.course.id)) {
           addPracticumAPI(this.temp.actualPracticum.name, this.temp.actualPracticum.course.id)
             .then(response => {
-              if (response.response === 1) {
+              if (response.status === 201) {
                 successAlert('Praktikum berhasil ditambahkan')
-                this.emitter.mode = 'add'
-                this.emitter.practicum = response.object.practicum
-                this.$emit('changelist', this.emitter)
+                this.$emit('changelist')
                 this.$emit('closediv')
               }
             })
@@ -167,12 +165,12 @@
         this.switchEditCoordinator()
       },
       getAllCourses: function () {
-        getAllCoursesAPI().then(response => { this.courses = response.object.courses.content })
+        getAllCoursesAPI().then(response => { this.courses = response.data.content })
       },
       getCandidateKoas (search, loading) {
         loading(true)
         fetchCandidateCoordinatorAPI(search).then(resp => {
-          this.temp.candidateKoas = resp.object.users.map(v => {
+          this.temp.candidateKoas = resp.data.map(v => {
             var option = {}
             option.value = v
             option.label = v.name
@@ -184,11 +182,9 @@
       deletePracticum: function () {
         deletePracticumAPI(this.temp.actualPracticum)
           .then(response => {
-            if (response.response === 1) {
+            if (response.status === 200) {
               successAlert('Praktikum berhasil dihapus')
-              this.emitter.practicum = Object.assign({}, this.temp.actualPracticum)
-              this.emitter.mode = 'delete'
-              this.$emit('changelist', this.emitter)
+              this.$emit('changelist')
               this.$emit('closediv')
             } else {
               warningAlert('Gagal menghapus praktikum')
@@ -198,11 +194,9 @@
       updatePracticum: function () {
         updatePracticumAPI(this.temp.actualPracticum)
           .then(response => {
-            if (response.response === 1) {
+            if (response.status === 200) {
               successAlert('Data praktikum berhasil diubah')
-              this.emitter.practicum = Object.assign({}, this.temp.actualPracticum)
-              this.emitter.mode = 'update'
-              this.$emit('changelist', this.emitter)
+              this.$emit('changelist')
               this.$emit('closediv')
             } else {
               warningAlert('Gagal menyimpan perubahan praktikum')
@@ -212,7 +206,6 @@
     },
     destroyed () {
       this.course = {}
-      this.emitter = {}
       this.temp = {}
       this.practicum = {}
     }

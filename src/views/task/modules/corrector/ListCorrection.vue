@@ -11,7 +11,11 @@
                     </p>
                     <p>
                     <button class="btn btn-primary">Input Nilai</button>
-                    <button class="btn btn-success">Lihat</button>
+                    <button class="btn btn-success" @click="modal = modal ? false : true">Lihat</button>
+                    <b-modal title="Modal title" hide-footer size="lg" v-model="modal" 
+      hide-header-close no-close-on-backdrop no-close-on-esc>
+      <p>TRR</p>
+                    </b-modal>
                     </p>
                   </div>
                 </div>
@@ -36,6 +40,7 @@
     },
     data () {
       return {
+        modal: false
       }
     },
     computed: {

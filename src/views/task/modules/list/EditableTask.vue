@@ -1,5 +1,7 @@
 <template>
-    <div class="animated fadeIn fadeOut">
+    <div class="fadeIn">
+      <b-modal title="Modal title" hide-footer size="lg" v-model="modal" 
+      hide-header no-close-on-backdrop no-close-on-esc>
         <div class="card card-primary">
             <div class="card-header">
                 <div v-if="mode=='add'"><strong>Tambah Tugas Baru</strong>
@@ -98,6 +100,7 @@
                 <button v-on:click="closeDiv" class="btn btn-sm" ><i class="fa fa-ban"></i> Batal</button></div>
             </div>
         </div>
+      </b-modal>
     </div>
 </template>
 
@@ -153,7 +156,8 @@
           mode: '',
           task: {},
           category: ''
-        }
+        },
+        modal: true
       }
     },
     methods: {
@@ -176,11 +180,11 @@
         this.task.createdBy = this.$store.getters.user
         addTaskAPI(this.task)
           .then(response => {
-            if (response.response === 1) {
+            if (response.status === 201) {
               successAlert('Tugas berhasil ditambahkan')
               this.emitter.mode = 'add'
-              this.emitter.task = response.object.task
-              this.emitter.category = response.object.category
+              this.emitter.task = response.data.object.task
+              this.emitter.category = response.data.object.category
               this.$emit('changelist', this.emitter)
               this.$emit('closediv')
             }
@@ -190,11 +194,11 @@
         // required validation (to be implemented)
         updateTaskAPI(this.task)
           .then(response => {
-            if (response.response === 1) {
+            if (response.status === 200) {
               successAlert('Tugas berhasil diubah')
               this.emitter.mode = 'update'
-              this.emitter.task = response.object.task
-              this.emitter.category = response.object.category
+              this.emitter.task = response.data.object.task
+              this.emitter.category = response.data.object.category
               this.$emit('changelist', this.emitter)
               this.$emit('closediv')
             }
@@ -203,7 +207,7 @@
       deleteTask () {
         deleteTaskAPI(this.task)
           .then(response => {
-            if (response.response === 1) {
+            if (response.status === 200) {
               successAlert('Tugas berhasil dihapus')
               this.emitter.mode = 'delete'
               this.emitter.task = this.task

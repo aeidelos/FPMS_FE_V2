@@ -24,11 +24,11 @@ export default {
     if (this.classroom === null) this.$router.push('/')
     getAllTaskByClassroomAPI(this.classroom.id)
       .then(response => {
-        this.tasks.current = response.object.tasks
+        this.tasks.current = response.data
       })
     getAllTaskByClassroomPastAPI(this.classroom.id)
       .then(response => {
-        this.tasks.past = response.object.tasks
+        this.tasks.past = response.data
       })
   },
   data () {

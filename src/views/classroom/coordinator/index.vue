@@ -19,11 +19,11 @@ export default {
     var userid = getUser()
     getPracticumByCoordinatorAssistanceAPI(userid)
       .then(response => {
-        if (response.response === 1) {
-          this.practicum = response.object.practicum
-          getAllClassroomByPracticumAPI(response.object.practicum)
+        if (response.status === 200) {
+          this.practicum = response.data
+          getAllClassroomByPracticumAPI(response.data)
             .then(response => {
-              this.classrooms = response.object.classrooms
+              this.classrooms = response.data
             })
         } else {
         }

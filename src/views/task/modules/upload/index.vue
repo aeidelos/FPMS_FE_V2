@@ -1,28 +1,22 @@
 <template>
-    <div class="animated fadeIn fadeOut">
+    <div class="fadeIn">
         <div class="card card-primary">
             <div class="card-body col-sm-12">
                 <div>
                   <div class="upload">
-                        <ul>
-                        </ul>
-                        <div class="example-btn row">
-                          <div v-if="switcher.upload == 'on'">
-                            <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" type="file" v-on:change="fileChange">
+                        <div class="">
+                          <div class="row">Lampiran : {{ assignment.description }}</div>
+                          <div v-if="switcher.upload == 'on'" class="row">
+                            <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-if="getFileSingleOrMultiple" multiple type="file" v-on:change="fileChange">
+                            <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-else type="file" v-on:change="fileChange">
                             <button class="btn btn-primary btn-sm" v-on:click="fileUpload">Upload</button>
                             <button class="btn btn-danger btn-sm" v-if="document != null"
                             v-on:click="switcher.upload = 'off'">Batal</button>
+                            <button class="btn btn-warning btn-sm" v-on:click="closeView" >Tutup</button>
                           </div>
                           <div v-else>
-                            <p>Dokumen terunggah : {{ document.filename }}</p>
-                            <button class="btn btn-primary" v-on:click="switcher.upload = 'on'">Ubah</button>
-                            <button class="btn btn-success" v-on:click="fileView">Lihat</button>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div v-if="switcher.view == 'on'">
-                            
-                          </div>
+                              <button class="btn btn-success" v-on:click="fileView(document)">Lihat</button>
+                              <button class="btn btn-primary" v-on:click="switcher.upload = 'on'">Ubah</button></div>
                         </div>
                       </div>
                 </div>
@@ -63,8 +57,8 @@
       if (this.assignment !== null) {
         getAssignmentInformationAPI(this.assignment, this.practican)
           .then(response => {
-            this.document = response.object.document
-            if (this.document !== undefined) {
+            this.document = response.data
+            if (this.document.length > 0) {
               this.switcher.upload = 'off'
             }
           })
@@ -74,14 +68,13 @@
       return {
         temp: {},
         emitter: {},
-        file: null,
-        document: {
-          id: null
-        },
+        file: [],
+        document: [],
         switcher: {
           upload: 'on',
           view: 'on'
-        }
+        },
+        modal: true
       }
     },
     computed: {
@@ -92,25 +85,38 @@
         } else if (ext === 'sourcecode') {
           return '.java,.php,.txt,.py'
         }
+      },
+      getFileSingleOrMultiple () {
+        const ext = this.assignment.fileAllowed
+        if (ext === 'document') {
+          return false
+        } else if (ext === 'sourcecode') {
+          return true
+        }
       }
     },
     methods: {
-      fileView () {
-        this.$emit('viewDocument', this.document)
+      fileView (docs) {
+        this.$emit('viewDocument', docs)
+      },
+      closeView () {
+        this.$emit('closeViewer')
       },
       fileChange (event) {
-        this.file = event.target.files[0]
+        this.file = event.target.files
       },
       fileUpload () {
         if (this.file === null) {
           warningAlert('File tidak boleh kosong')
         } else {
           const uploader = new FormData()
-          uploader.append('file', this.file, this.file.name)
-          if (this.document !== null) uploader.append('document', this.document.id)
+          for (let i = 0; i < this.file.length; i++) {
+            uploader.append('file', this.file[i], this.file[i].name)
+          }
+          if (this.document.length > 0) uploader.append('document', this.document[0].id)
           uploadAssignmentAPI(this.assignment, this.practican, uploader)
             .then(response => {
-              this.document = response.object.document
+              this.document = response.data
               this.switcher.upload = 'off'
             })
         }

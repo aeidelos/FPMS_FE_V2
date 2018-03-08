@@ -1,5 +1,7 @@
 <template>
-    <div class="animated fadeIn fadeOut">
+    <div class="fadeIn">
+      <b-modal title="Modal title" hide-footer size="lg" v-model="modal" 
+      hide-header no-close-on-backdrop no-close-on-esc>
         <div class="card">
             <div class="card-header">
                 <div v-if="mode=='add'"><strong>Tambah Mata Kuliah</strong>
@@ -39,6 +41,7 @@
                 <button v-on:click="closeSwitch" class="btn btn-sm"><i class="fa fa-ban"></i> Batal</button></div>
             </div>
         </div>
+      </b-modal>
     </div>
 </template>
 
@@ -86,10 +89,7 @@
             courseName: ''
           }
         },
-        emitter: {
-          mode: '',
-          course: {}
-        }
+        modal: true
       }
     },
     methods: {
@@ -97,12 +97,10 @@
         if (validate(this.temp.actualCourse.courseCode, this.temp.actualCourse.courseName)) {
           addCourse(this.temp.actualCourse.courseCode, this.temp.actualCourse.courseName)
             .then(response => {
-              if (response.response === 1) {
+              if (response.status === 201) {
                 successAlert('Berhasil menambahkan mata kuliah')
                 this.tempCourse = Object.assign({}, this.temp.actualCourse)
-                this.emitter.mode = 'add'
-                this.emitter.course = Object.assign({}, this.temp.actualCourse)
-                this.$emit('changelist', this.emitter)
+                this.$emit('changelist')
                 this.$emit('closediv')
               }
             })
@@ -114,26 +112,22 @@
       deleteCourseAction: function () {
         deleteCourse(this.temp.actualCourse.id)
           .then(response => {
-            if (response.response === 1) {
+            if (response.status === 200) {
               successAlert('Berhasil menghapus mata kuliah')
               this.tempCourse = Object.assign({}, this.temp.actualCourse)
-              this.emitter.mode = 'delete'
-              this.emitter.course = Object.assign({}, this.temp.actualCourse)
-              this.$emit('changelist', this.emitter)
+              this.$emit('changelist')
               this.$emit('closediv')
             }
           })
       },
       updateCourseAction: function () {
         if (validate(this.temp.actualCourse.courseName, this.temp.actualCourse.courseCode)) {
-          updateCourse(this.temp.actualCourse.id, this.temp.actualCourse.courseCode, this.temp.actualCourse.courseName)
+          updateCourse(this.temp.actualCourse.id, this.temp.actualCourse.courseName, this.temp.actualCourse.courseCode)
             .then(response => {
-              if (response.response === 1) {
+              if (response.status === 200) {
                 successAlert('Berhasil mengubah mata kuliah')
                 this.tempCourse = Object.assign({}, this.temp.actualCourse)
-                this.emitter.mode = 'update'
-                this.emitter.course = Object.assign({}, this.temp.actualCourse)
-                this.$emit('changelist', this.emitter)
+                this.$emit('changelist')
                 this.$emit('closediv')
               }
             })
@@ -142,7 +136,6 @@
     },
     destroyed () {
       this.course = {}
-      this.emitter = {}
     }
   }
 </script>

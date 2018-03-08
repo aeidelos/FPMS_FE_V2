@@ -1,5 +1,7 @@
 <template>
-    <div class="animated fadeIn fadeOut">
+    <div class="fadeIn">
+      <b-modal title="Modal title" hide-footer size="lg" v-model="modal" 
+      hide-header no-close-on-backdrop no-close-on-esc>
         <div class="card">
             <div class="card-header">
                 <div v-if="mode=='add'"><strong>Tambah Kelas Baru</strong>
@@ -75,6 +77,7 @@
                 <button class="btn btn-sm" v-on:click="closediv"><i class="fa fa-ban"></i> Batal</button></div>
             </div>
         </div>
+      </b-modal>
     </div>
 </template>
 
@@ -136,7 +139,8 @@
         emitter: {
           mode: '',
           classroom: {}
-        }
+        },
+        modal: true
       }
     },
     computed: {
@@ -149,12 +153,14 @@
         if (validateAdd(this.temp.actualClassroom)) {
           addClassroomAPI(this.temp.actualClassroom)
             .then(response => {
-              this.temp.actualClassroom = response.object.classroom
-              this.emitter.mode = 'add'
-              this.emitter.classroom = response.object.classroom
-              this.$emit('changelist', this.emitter)
-              successAlert('Kelas berhasil ditambahkan')
-              this.closediv()
+              if (response.status === 201) {
+                this.temp.actualClassroom = response.data
+                this.emitter.mode = 'add'
+                this.emitter.classroom = response.data
+                this.$emit('changelist', this.emitter)
+                successAlert('Kelas berhasil ditambahkan')
+                this.closediv()
+              }
             })
         } else {
           warningAlert('Silahkan lengkapi form pengisian')
@@ -164,23 +170,27 @@
         if (validateUpdate(this.temp.actualClassroom)) {
           updateClassroomAPI(this.temp.actualClassroom)
             .then(response => {
-              this.temp.actualClassroom = response.object.classroom
-              this.emitter.mode = 'edit'
-              this.emitter.classroom = response.object.classroom
-              this.$emit('changelist', this.emitter)
-              successAlert('Kelas berhasil diubah')
-              this.closediv()
+              if (response.status === 200) {
+                this.temp.actualClassroom = response.data
+                this.emitter.mode = 'edit'
+                this.emitter.classroom = response.data
+                this.$emit('changelist', this.emitter)
+                successAlert('Kelas berhasil diubah')
+                this.closediv()
+              }
             })
         }
       },
       deleteClassroom: function () {
         deleteClassroomAPI(this.temp.actualClassroom)
           .then(response => {
-            this.emitter.mode = 'delete'
-            this.emitter.classroom = this.temp.actualClassroom
-            this.$emit('changelist', this.emitter)
-            successAlert('Kelas berhasil dihapus')
-            this.closediv()
+            if (response === 200) {
+              this.emitter.mode = 'delete'
+              this.emitter.classroom = this.temp.actualClassroom
+              this.$emit('changelist', this.emitter)
+              successAlert('Kelas berhasil dihapus')
+              this.closediv()
+            }
           })
       },
       closediv: function () {
@@ -189,7 +199,7 @@
       getCandidateAssistance: function (search, loading) {
         loading(true)
         fetchCandidateAssistanceAPI(this.temp.actualClassroom, search).then(resp => {
-          this.temp.candidateAssistance = resp.object.users.map(v => {
+          this.temp.candidateAssistance = resp.data.map(v => {
             var option = {}
             option.value = v
             option.label = v.name

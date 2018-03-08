@@ -141,7 +141,7 @@ export default {
           console.log(4)
         }
         console.log(5)
-        this.classrooms = Object.assign({}, classroomTemp)
+        this.classrooms = Object.assign([], classroomTemp)
       }
     }
   }

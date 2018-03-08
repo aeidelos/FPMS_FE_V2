@@ -1,4 +1,4 @@
-import { request } from '@/utils/request'
+import { requestAPI as request } from '@/utils/request'
 
 export function getAllCourses () {
   return request('get', 'course', '')

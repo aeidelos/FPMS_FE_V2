@@ -1,19 +1,22 @@
 <template>
   <div class="animated fadeIn">
     <div class="row">
-      <div class="col-md-12">
-        <div v-if="filterExtension == 'pdf'">
-        <object  type="application/pdf" style="height:600px; width:100%;"
-        v-bind:data="getView" id="show_obj1" class="obj"></object>
+      <b-modal title="Modal title" hide-footer size="lg" v-model="modal" 
+       hide-header-close no-close-on-backdrop no-close-on-esc>
+        <div class="col-md-12">
+          <div v-if="filterExtension == 'pdf'">
+          <object  type="application/pdf" style="height:600px; width:100%;"
+          v-bind:data="getView" id="show_obj1" class="obj"></object>
+          </div>
+          <div v-else>
+          <span>Oops, file saat ini belum support untuk ditampilkan</span>
+          <a v-bind:href="getView">Download File</a>
+          </div>
+          <div>
+            <button v-on:click="closeViewer" class="btn btn-warning">Close</button>
+          </div>
         </div>
-        <div v-else>
-        <span>Oops, file saat ini belum support untuk ditampilkan</span>
-        <a v-bind:href="getView">Download File</a>
-        </div>
-        <div>
-          <button v-on:click="closeViewer" class="btn btn-warning">Close</button>
-        </div>
-      </div>
+      </b-modal>
     </div>
   </div>
 </template>
@@ -29,15 +32,16 @@ export default {
   },
   mounted () {
     if (this.document !== null) {
-      getDocumentAPI(this.document)
+      getDocumentAPI(this.document[0])
         .then(response => {
-          this.result = URL.createObjectURL(new Blob([response], {type: 'application/pdf'}))
+          this.result = URL.createObjectURL(new Blob([response.data], {type: 'application/pdf'}))
         })
     }
   },
   data () {
     return {
-      result: {}
+      result: {},
+      modal: true
     }
   },
   computed: {
@@ -45,7 +49,7 @@ export default {
       return this.result
     },
     filterExtension () {
-      var fileName = this.document.filename
+      var fileName = this.document[0].filename
       var ext = fileName.substr(fileName.lastIndexOf('.') + 1)
       return ext
     }
