@@ -10,7 +10,7 @@
           </div>
           <div v-else>
           <span>Oops, file saat ini belum support untuk ditampilkan</span>
-          <a v-bind:href="getView">Download File</a>
+          <a target="_blank" v-bind:href="getLinkDocument">Download File</a>
           </div>
           <div>
             <button v-on:click="closeViewer" class="btn btn-warning">Close</button>
@@ -52,6 +52,9 @@ export default {
       var fileName = this.document[0].filename
       var ext = fileName.substr(fileName.lastIndexOf('.') + 1)
       return ext
+    },
+    getLinkDocument () {
+      return 'http://localhost:8000/file/assignment/' + this.document[0].id
     }
   },
   destroyed () {

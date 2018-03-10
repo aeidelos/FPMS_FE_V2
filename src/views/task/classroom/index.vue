@@ -21,7 +21,7 @@ export default {
     }
   },
   mounted () {
-    if (this.classroom === null) this.$router.push('/')
+    if (this.classroom === null) this.$router.go(-1)
     getAllTaskByClassroomAPI(this.classroom.id)
       .then(response => {
         this.tasks.current = response.data

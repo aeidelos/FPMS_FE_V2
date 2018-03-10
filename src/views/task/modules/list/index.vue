@@ -85,7 +85,8 @@
                                     <div class="row" style="margin-bottom:30px;">
                                       <div class="col-sm-12">
                                         <div v-if="task.id != switcher.viewUpload">
-                                           <button class="btn btn-primary pull-right" v-on:click="switcher.corrector = 'on'">Lihat Pengumpulan</button>
+                                           <button class="btn btn-primary pull-right" 
+                                           v-on:click="switchToNextRouteClassroom(classroom,task)">Lihat Pengumpulan</button>
                                            <button class="btn btn-success pull-right" v-on:click="viewUpload(task)">Unggah Pengerjaan</button>
                                         </div>
                                       </div>
@@ -171,7 +172,11 @@ export default {
         data: {},
         type: {}
       },
-      selectedTask: null
+      selectedTask: null,
+      exporter: {
+        classroom: {},
+        assignment: {}
+      }
     }
   },
   methods: {
@@ -226,6 +231,9 @@ export default {
         this.activeLink.current = false
         this.activeLink.past = true
       }
+    },
+    switchToNextRouteClassroom (classroom, task) {
+      this.$router.push({name: 'CollectionTask', params: {classroom, task}})
     },
     updateList (args) {
       if (args.mode === 'add') {

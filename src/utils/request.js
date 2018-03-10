@@ -104,7 +104,6 @@ function auth (username, password) {
           setUsername(username)
           setToken(response.data.access_token, response.data.expires_in)
           token = response.data.access_token
-          console.log(token)
           successAlert('Login berhasil')
             .then(result => {
               if (result.value) {

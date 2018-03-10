@@ -17,6 +17,7 @@ import ClassroomAssistance from '@/views/classroom/assistance'
 
 import TaskCoordinator from '@/views/task/practicum'
 import TaskClassroom from '@/views/task/classroom'
+import TaskCollection from '@/views/task/collection'
 
 Vue.use(Router)
 
@@ -91,6 +92,12 @@ export default new Router({
           path: 'classroom',
           name: 'ClassroomTask',
           component: TaskClassroom,
+          props: true
+        },
+        {
+          path: 'collection',
+          name: 'CollectionTask',
+          component: TaskCollection,
           props: true
         }
       ]
