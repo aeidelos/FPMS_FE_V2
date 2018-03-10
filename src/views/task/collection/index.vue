@@ -1,5 +1,5 @@
 <template>
-  <div role="tablist" class="fadeIn animated">
+  <!-- <div role="tablist" class="fadeIn animated">
     <b-card no-body class="mb-1" v-for="document in documents">
       <b-card-header header-tag="header" class="p-1" role="tab" v-on:click="setActiveDocument(document[0].practican.id)" > 
         <b-btn block href="#"  >{{ document[0].practican.name }}</b-btn>
@@ -15,7 +15,27 @@
         </b-card-body>
       </b-collapse>
     </b-card>
+  </div> -->
+
+ <div id="accordion" role="tablist"class="fadeIn animated">
+  <div class="card" v-for="(document,index) in documents" :key="index">
+    <div class="card-header" role="tab" :id="'heading'+ index" v-on:click="setActiveDocument(document[0].practican.id)" >
+      <h5 class="mb-0">
+        <a data-toggle="collapse"
+        v-on:click="setActiveDocument(document)" :href="'#collapse'+index" aria-expanded="true" aria-controls="'collapse'+index">
+          {{ document[0].practican.name }}
+        </a>
+      </h5>
+    </div>
+    <div :id="'collapse'+index" class="collapse" 
+      v-bind:class="{show: active !== null && active == document[0].practican.id}"
+    role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
   </div>
+</div>
 </template>
 
 
@@ -47,7 +67,7 @@ export default {
   data () {
     return {
       documents: [],
-      active: {}
+      active: null
     }
   },
   methods: {
