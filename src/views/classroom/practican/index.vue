@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn">
-    <classroom v-bind:classrooms="classrooms" v-bind:practicum="practicum" role="'coordinator'"></classroom>
+    <classroom v-bind:classrooms="classrooms" v-bind:practicum="practicum" role="practican"></classroom>
   </div>
 </template>
 

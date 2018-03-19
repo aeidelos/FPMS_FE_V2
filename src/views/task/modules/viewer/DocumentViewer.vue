@@ -28,11 +28,21 @@ export default {
   components: {
   },
   props: {
-    document: null
+    document: null,
+    withPlagiarism: {
+      default: 'false',
+      required: false
+    }
   },
   mounted () {
     if (this.document !== null) {
-      getDocumentAPI(this.document[0])
+      var docs
+      if (this.withPlagiarism === 'false') {
+        docs = this.document[0]
+      } else {
+        docs = this.document[0].document
+      }
+      getDocumentAPI(docs)
         .then(response => {
           this.result = URL.createObjectURL(new Blob([response.data], {type: 'application/pdf'}))
         })
@@ -49,12 +59,23 @@ export default {
       return this.result
     },
     filterExtension () {
-      var fileName = this.document[0].filename
+      var fileName
+      if (this.withPlagiarism === 'false') {
+        fileName = this.document[0].filename
+      } else {
+        fileName = this.document[0].document.filename
+      }
       var ext = fileName.substr(fileName.lastIndexOf('.') + 1)
       return ext
     },
     getLinkDocument () {
-      return 'http://192.168.100.2:8000/file/assignment/' + this.document[0].id
+      var docs
+      if (this.withPlagiarism === 'false') {
+        docs = this.document[0]
+      } else {
+        docs = this.document[0].document
+      }
+      return 'http://localhost:8000/file/assignment/' + docs.id
     }
   },
   destroyed () {

@@ -23,3 +23,11 @@ export function getDocumentByClassroom (task, classroom) {
 export function runCode (document) {
   return request('get', 'file/compile/' + document.id)
 }
+
+export function setGrade (idDocument, grade) {
+  return request('post', '/assignment/grade/set', 'idDocument=' + idDocument + '&grade=' + grade)
+}
+
+export function getDashboard (id) {
+  return request('get', 'assignment/dashboard/' + id)
+}

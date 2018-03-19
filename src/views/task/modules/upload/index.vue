@@ -5,18 +5,25 @@
                 <div>
                   <div class="upload">
                         <div class="">
-                          <div class="row">Lampiran : {{ assignment.description }}</div>
-                          <div v-if="switcher.upload == 'on'" class="row">
-                            <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-if="getFileSingleOrMultiple" multiple type="file" v-on:change="fileChange">
-                            <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-else type="file" v-on:change="fileChange">
-                            <button class="btn btn-primary btn-sm" v-on:click="fileUpload">Upload</button>
-                            <button class="btn btn-danger btn-sm" v-if="document != null"
-                            v-on:click="switcher.upload = 'off'">Batal</button>
-                            <button class="btn btn-warning btn-sm" v-on:click="closeView" >Tutup</button>
+                          <div class="row ">
+                            <div class="col-md-12">
+                              <div class="col-md-12 attachment-title">Lampiran : {{ assignment.description }}</div>
+                              <div class="col-md-12">
+                                <div v-if="switcher.upload == 'on'" class="attachment-content">
+                                    <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-if="getFileSingleOrMultiple" multiple type="file" v-on:change="fileChange">
+                                    <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-else type="file" v-on:change="fileChange">
+                                    <button class="btn btn-primary btn-sm" v-on:click="fileUpload">Upload</button>
+                                    <button class="btn btn-danger btn-sm" v-if="document != null"
+                                    v-on:click="switcher.upload = 'off'">Batal</button>
+                                    <button class="btn btn-warning btn-sm" v-on:click="closeView" >Tutup</button>
+                                  </div>
+                                  <div v-else>
+                                      <button class="btn btn-success" v-on:click="fileView(document)">Lihat</button>
+                                      <button class="btn btn-primary" v-on:click="switcher.upload = 'on'">Ubah</button>
+                                  </div>
+                              </div>
+                            </div>
                           </div>
-                          <div v-else>
-                              <button class="btn btn-success" v-on:click="fileView(document)">Lihat</button>
-                              <button class="btn btn-primary" v-on:click="switcher.upload = 'on'">Ubah</button></div>
                         </div>
                       </div>
                 </div>
@@ -29,6 +36,12 @@
   .example-simple label.btn {
     margin-bottom: 0;
     margin-right: 1rem;
+  }
+  .upload {
+    padding: 10px;
+  }
+  .attachment-title {
+    margin-bottom: 10px;
   }
 </style>
 

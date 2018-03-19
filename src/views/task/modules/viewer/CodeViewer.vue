@@ -39,7 +39,11 @@ export default {
   components: {
   },
   props: {
-    document: null
+    document: null,
+    withPlagiarism: {
+      default: 'false',
+      required: false
+    }
   },
   methods: {
     getName (ext) {
@@ -56,19 +60,25 @@ export default {
       this.$emit('closeViewer')
     },
     runCode () {
-      runCodeAPI(this.document[0])
+      var code
+      if (this.withPlagiarism === 'true') {
+        code = this.document[0].document
+      } else {
+        code = this.document[0]
+      }
+      runCodeAPI(code)
         .then(response => {
           if (response.status === 200) {
             this.codeResult = response.data
-          } else {
-            warningAlert(response)
           }
         })
+        .catch(warningAlert('Server error - Code Compiler Offline'))
     }
   },
   mounted () {
     if (this.document !== null) {
       this.document.forEach(element => {
+        if (this.withPlagiarism === 'true') element = element.document
         getDocumentAPI(element)
           .then(response => {
             var decoder = new TextDecoder('utf-8')

@@ -7,7 +7,7 @@ import { warningAlert, successAlert } from '@/utils/alert'
 
 Vue.use(axios, VueAxios)
 
-const BaseURL = 'http://192.168.100.2:8000/'
+const BaseURL = 'http://localhost:8000/'
 
 const ApplicationAuth = {
   username: 'rma',

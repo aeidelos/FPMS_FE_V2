@@ -2,16 +2,18 @@
     <div class="animated fadeIn">
         <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="card border" style="min-height:450px;">
+              <div v-if="classrooms.length <= 0 && role != 'coordinator'">
+                <resource-empty v-bind:title="title" style="min-height:450px;"></resource-empty>
+              </div>
+              <div v-else>
                 <div class="card-header">
-                    <div>
-                        <div>
-                            <button v-on:click="addClassroom" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>Tambah Baru</button>
-                        </div>
-                    </div>
-                </div>
-                <div>
+                  <button v-on:click="addClassroom" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>Tambah Baru</button>
                 </div>
                 <div class="card-body">
+                    <div v-if="switcher.announcement == 'on'" >
+                      <announcement  v-on:closediv="switcher.announcement = 'off'; temp.selectedClassroom = null;"
+                       v-bind:classroom="temp.selectedClassroom"></announcement>
+                    </div>
                     <div v-if="switcher.editableClassroom == 'on'">
                       <div v-if="switcher.editableMode=='add'"><editable-classroom  v-bind:practicum="practicum" v-on:closediv="switchEditableClassroom" v-on:changelist="updateClassroomList" act='add'></editable-classroom></div>
                       <div v-if="switcher.editableMode=='edit'"><editable-classroom v-bind:classroom="temp.selectedClassroom" act='edit' v-on:closediv="switchEditableClassroom" v-on:changelist="updateClassroomList"></editable-classroom></div>
@@ -54,16 +56,18 @@
                                     <span>Dosen Pengampu : </span> to be implemented
                                   </div>
                                   <br>
-                                  <button class="btn btn-md btn-success btn-block" v-on:click="switchToNextRouteClassroom(classroom)">Tugas & Laporan</button>
                                 </div>
                               </div>
                               <br>
                               <div class="row">
+                                 <button class="btn btn-md btn-primary pull-right" @click="activeAnnouncement(classroom)">Pengumuman</button>
+                                 <button class="btn btn-md btn-success pull-right" v-on:click="switchToNextRouteClassroom(classroom)">Tugas & Laporan</button>
                               </div>
                             </div>
                         </div>
                     </div>
                 </div>
+              </div>
             </div>
         </div>
     </div>
@@ -71,10 +75,14 @@
 
 <script>
 import EditableClassroom from './component/EditableClassroom'
+import ResourceEmpty from '@/components/ResourceEmpty'
+import Announcement from './component/Announcement'
 export default {
   name: 'classroom',
   components: {
-    EditableClassroom
+    EditableClassroom,
+    ResourceEmpty,
+    Announcement
   },
   props: {
     classrooms: {
@@ -91,6 +99,13 @@ export default {
     }
   },
   mounted () {
+    if (this.role === 'assistance') {
+      this.title = 'Anda belum menjadi asisten'
+    } else if (this.role === 'coordinator') {
+      this.title = 'Belum ada kelas. Silahkan buat terlebih dahulu'
+    } else {
+      this.title = 'Anda belum masuk ke kelas praktikum'
+    }
   },
   data () {
     return {
@@ -99,11 +114,17 @@ export default {
       },
       switcher: {
         editableClassroom: 'off',
-        editableMode: 'add'
-      }
+        editableMode: 'add',
+        announcement: 'off'
+      },
+      title: ''
     }
   },
   methods: {
+    activeAnnouncement (classroom) {
+      this.switcher.announcement = 'on'
+      this.temp.selectedClassroom = classroom
+    },
     switchToNextRouteClassroom (classroom) {
       this.$router.push({name: 'ClassroomTask', params: {classroom}})
     },
@@ -129,18 +150,13 @@ export default {
       this.switchEditableClassroom()
     },
     updateClassroomList (args) {
-      console.log(1)
       if (args.mode === 'add') {
         this.classrooms.push(args.classroom)
-        console.log(2)
       } else {
-        console.log(3)
         var classroomTemp = this.classrooms.filter(classroom => { return classroom.id !== args.classroom.id })
         if (args.mode === 'edit') {
           classroomTemp.push(args.classroom)
-          console.log(4)
         }
-        console.log(5)
         this.classrooms = Object.assign([], classroomTemp)
       }
     }

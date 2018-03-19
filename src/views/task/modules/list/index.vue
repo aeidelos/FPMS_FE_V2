@@ -73,7 +73,7 @@
                                       </div>
                                     </div>
                                     <div class="row">
-                                      <div class="col-sm-12">
+                                      <div class="col-md-12 col-sm-12">
                                         <div v-for="assignment in task.assignments">
                                           <uploader-task v-bind:assignment="assignment" 
                                           v-bind:practican="getActiveUser" v-if="task.id == switcher.viewUpload"
@@ -83,7 +83,7 @@
                                       </div>
                                     </div>
                                     <div class="row" style="margin-bottom:30px;">
-                                      <div class="col-sm-12">
+                                      <div class="col-sm-12 col-md-12">
                                         <div v-if="task.id != switcher.viewUpload">
                                            <button class="btn btn-primary pull-right" 
                                            v-on:click="switchToNextRouteClassroom(classroom,task)">Lihat Pengumpulan</button>
