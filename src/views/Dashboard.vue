@@ -18,7 +18,7 @@
           <div class="card text-white bg-info">
             <div class="card-body pb-0">
               <h4 class="mb-0"> {{ dashboard.average_plagiarism * 100 }} %</h4>
-              <p>Laporan Terdeteksi Plagiasi di Kelas yang Anda Ikuti</p>
+              <p>Rerata Plagiasi</p>
             </div>
             <div class="chart-wrapper px-3" style="height:70px;"><div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
               <canvas id="card-chart2" class="chart chartjs-render-monitor" height="70" width="371" style="display: block; width: 371px; height: 70px;"></canvas>
@@ -42,7 +42,7 @@
           <div class="card text-white bg-danger">
             <div class="card-body pb-0">
             <h4 class="mb-0">{{ dashboard.plagiarized }}</h4>
-            <p>Tugas Anda Terdeteksi Plagiasi</p>
+            <p>Terdeteksi Plagiasi</p>
             </div>
             <div class="chart-wrapper px-3" style="height:70px;"><div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
             <canvas id="card-chart4" class="chart chartjs-render-monitor" height="70" width="371" style="display: block; width: 371px; height: 70px;"></canvas>
@@ -112,21 +112,23 @@
               </div>
             </div>
               <div class="" style="height:300px;margin-top:40px;"></div>
-              
               </div>
             </div>
           </div>
         <div class="col-sm-12 col-lg-5" v-else-if="dashboardState('mhs')">
-          <div class="card">
+          <div class="card" style="height:200px;">
             <div class="card-body">
               <div class="row">
                 <div class="col-sm-7">
                   <h4 class="card-title mb-0">Enrollment Kelas</h4>
                 <div class="small text-muted"></div>
                 </div>
-
-                <div class="col-sm-7 d-none d-md-block">
-              </div>
+                <div class="row"  style="margin-top:50px; margin-left:50px;">
+                  <div class="col-sm-12 col-md-7">
+                  <input type="text" class="form-control" placeholder="Kode Enrollment" v-model="enroll.key">
+                </div>
+                <div class="col-sm-12 col-md-5"><button class="btn btn-primary btn-block" @click="checkClassEnrollment">Cari</button></div>
+                </div>
             </div>
               <div class="" style="height:300px;margin-top:40px;"></div>
               
@@ -139,24 +141,37 @@
 
 <script>
 import { getDashboard as getDashboardAPI } from '@/api/assignment'
+import { getByEnrollmentKey, updateClassroom } from '@/api/classroom'
+import { confirmationAlert, successAlert } from '@/utils/alert'
 export default {
   name: 'dashboard',
-  async mounted () {
+  mounted () {
     this.user = this.$store.getters.user
-    setTimeout(this.dashboard = await getDashboardAPI(this.user.id)
-      .then(response => {
-        return response.data
-      }), 1000)
+    setTimeout(
+      getDashboardAPI(this.getUserState)
+        .then(response => {
+          this.dashboard = response.data
+          console.log(response.data)
+        }), 5000)
   },
   data () {
     return {
-      user: [],
-      dashboard: {}
+      user: {},
+      dashboard: {},
+      enroll: {
+        key: ''
+      }
     }
   },
   computed: {
     getDashboardState () {
       return this.dashboard
+    },
+    getStore () {
+      return this.$store.getters.user
+    },
+    getUserState () {
+      return this.user
     }
   },
   methods: {
@@ -170,6 +185,25 @@ export default {
         }
       })
       return permitted
+    },
+    checkClassEnrollment () {
+      getByEnrollmentKey(this.enroll.key, this.user.id)
+        .then(response => {
+          if (response.data !== undefined) {
+            let msg = 'Apakah anda yakin akan bergabung dengan kelas ' + response.data.name + '?'
+            confirmationAlert('Kelas ditemukan', msg,
+              () => {
+                var classroom = response.data
+                classroom.practican.push(this.user)
+                updateClassroom(classroom)
+                  .then(response => {
+                    successAlert('Anda berhasil bergabung di kelas ' + classroom.name)
+                    this.enroll.key = ''
+                  })
+              }
+            )
+          }
+        })
     }
   }
 }

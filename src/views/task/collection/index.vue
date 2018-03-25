@@ -1,9 +1,9 @@
 <template>
- <div id="accordion" role="tablist" class="fadeIn animated">
-  <div class="card" v-for="(document,index) in documents" :key="index">
+ <div id="accordion" role="tablist" class="fadeIn animated row">
+  <div class="card col-md-6 col-sm-12" v-for="(document,index) in documents" :key="index">
     <div class="card-header" role="tab" :id="'heading'+ index" v-on:click="setActiveDocument(Object.keys(document)[0])" >
       <h5 class="mb-0">
-        <a data-toggle="collapse" aria-expanded="true" aria-controls="'collapse'+index">
+        <a :data-toggle="'collapse'+index" aria-expanded="true" :aria-controls="'collapse'+index">
           {{ getPracticanName(document)}}
         </a>
       </h5>
@@ -13,8 +13,8 @@
     role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
       <div class="card-body">
         <div v-for="assignment in document">
-          <div class="row card" style="padding:20px; margin:20px;">
-            <div class="card-body" style="padding:20px;">
+          <div class="row" style="padding:0px; margin:0px;">
+            <div class="card" style="padding:20px;">
               <div class="row">
                 <p>Nama file : </p>
               </div>

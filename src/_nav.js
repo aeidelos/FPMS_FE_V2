@@ -3,7 +3,7 @@ export default {
     {
       name: 'Dashboard',
       url: '/dashboard',
-      icon: 'icon-speedometer',
+      icon: 'icon-home',
       roles: 'all'
     },
     {
@@ -18,7 +18,7 @@ export default {
     },
     {
       name: 'Praktikum',
-      icon: 'icon-cursor',
+      icon: 'icon-note',
       url: '/classroom/practican',
       roles: 'mhs'
     },
@@ -34,12 +34,12 @@ export default {
     },
     {
       name: 'Asistensi',
-      icon: 'icon-cursor',
+      icon: 'icon-folder',
       url: '/classroom',
       children: [
         {
           name: 'Kelas',
-          icon: 'icon-cursor',
+          icon: 'icon-arrow-right',
           url: '/classroom/assistance'
         }
       ],
@@ -57,18 +57,18 @@ export default {
     },
     {
       name: 'Koordinator',
-      icon: 'icon-cursor',
+      icon: 'icon-folder',
       url: '/coordinator',
       children: [
         {
           name: 'Tugas & Kegiatan',
-          icon: 'icon-cursor',
+          icon: 'icon-arrow-right',
           url: '/task/coordinator',
           roles: 'koas'
         },
         {
           name: 'Kelas',
-          icon: 'icon-cursor',
+          icon: 'icon-arrow-right',
           url: '/classroom/coordinator',
           roles: 'koas'
         }
@@ -87,26 +87,20 @@ export default {
     },
     {
       name: 'Laboratorium',
-      icon: 'icon-cursor',
+      icon: 'icon-folder',
       url: '/laboratory',
       roles: 'kalab',
       children: [
         {
           name: 'Praktikum',
-          icon: 'icon-cursor',
+          icon: 'icon-grid',
           url: '/laboratory/practicum',
           roles: 'kalab'
         },
         {
           name: 'Mata Kuliah',
-          icon: 'icon-cursor',
+          icon: 'icon-grid',
           url: '/laboratory/course',
-          roles: 'kalab'
-        },
-        {
-          name: 'Laporan',
-          icon: 'icon-cursor',
-          url: '/laboratory/report',
           roles: 'kalab'
         }
       ]

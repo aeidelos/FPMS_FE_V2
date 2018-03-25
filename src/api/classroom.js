@@ -24,8 +24,8 @@ export function deleteClassroom (classroom) {
   return request('delete', 'classroom/' + classroom.id)
 }
 
-export function getByEnrollmentKey (enrollmentKey) {
-  return request('post', 'classroom/enroll/' + enrollmentKey)
+export function getByEnrollmentKey (enrollmentKey, id) {
+  return request('get', 'classroom/enroll/' + enrollmentKey + '/' + id)
 }
 
 export function fetchCandidateAssistance (classroom, query) {

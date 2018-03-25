@@ -19,6 +19,9 @@ import TaskCoordinator from '@/views/task/practicum'
 import TaskClassroom from '@/views/task/classroom'
 import TaskCollection from '@/views/task/collection'
 
+import Register from '@/views/public/Register'
+import EditProfile from '@/views/EditProfile'
+
 Vue.use(Router)
 
 export default new Router({
@@ -36,6 +39,11 @@ export default new Router({
           path: 'dashboard',
           name: 'Dashboard',
           component: Dashboard
+        },
+        {
+          path: 'editprofile',
+          name: 'EditProfile',
+          component: EditProfile
         }
       ]
     },
@@ -114,6 +122,11 @@ export default new Router({
           path: 'login',
           name: 'Login',
           component: Login
+        },
+        {
+          path: 'register',
+          name: 'Register',
+          component: Register
         }
       ]
     }

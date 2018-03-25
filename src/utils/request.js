@@ -37,7 +37,7 @@ export function requestAPI (method, url, data, onSuccess, onFailed) {
       }
     )
     .catch((error) => {
-      if (onFailed !== undefined && onSuccess !== null) warningAlert(onFailed)
+      if (onFailed !== undefined && onFailed !== null) warningAlert(onFailed)
       console.log(error)
     }
     )

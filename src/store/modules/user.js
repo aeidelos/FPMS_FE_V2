@@ -10,7 +10,8 @@ const user = {
       identity: '',
       id: ''
     },
-    token: ''
+    token: '',
+    dashboard: {}
   },
   mutations: {
     SET_SIGNED: (state, user) => {

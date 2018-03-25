@@ -55,7 +55,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .main {
-    background: linear-gradient(to bottom right, #5898ff, rgb(253, 203, 37));
-  }
 </style>
