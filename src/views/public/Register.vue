@@ -50,7 +50,8 @@
                         <div class="row text-center">
                             <div class="col-sm-12 ">
                                 <div class="form-group form-actions ">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="button" class="btn btn-danger" @click="$router.push('/public/login')">Batal</button>
+                                    <button type="button" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>
                         </div>

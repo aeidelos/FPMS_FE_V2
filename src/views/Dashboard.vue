@@ -147,12 +147,6 @@ export default {
   name: 'dashboard',
   mounted () {
     this.user = this.$store.getters.user
-    setTimeout(
-      getDashboardAPI(this.getUserState)
-        .then(response => {
-          this.dashboard = response.data
-          console.log(response.data)
-        }), 5000)
   },
   data () {
     return {
@@ -160,7 +154,8 @@ export default {
       dashboard: {},
       enroll: {
         key: ''
-      }
+      },
+      update: 0
     }
   },
   computed: {
@@ -172,6 +167,18 @@ export default {
     },
     getUserState () {
       return this.user
+    },
+    getDashboard () {
+      getDashboardAPI(this.user)
+        .then(response => {
+          this.dashboard = response.data
+        })
+    }
+  },
+  updated () {
+    if (this.update === 0) {
+      this.getDashboard()
+      this.update = 1
     }
   },
   methods: {

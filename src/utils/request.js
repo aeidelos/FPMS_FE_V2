@@ -2,10 +2,12 @@ import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import router from '@/router/index'
+import store from '@/store/index'
 import { setToken, getToken, setUsername } from '@/utils/auth'
 import { warningAlert, successAlert } from '@/utils/alert'
 
 Vue.use(axios, VueAxios)
+Vue.use(store)
 
 const BaseURL = 'http://localhost:8000/'
 
@@ -107,7 +109,8 @@ function auth (username, password) {
           successAlert('Login berhasil')
             .then(result => {
               if (result.value) {
-                router.push('/dashboard')
+                store.dispatch('SET_USER', username)
+                router.push({name: 'Dashboard', params: {username: username}})
               }
             })
         } else {

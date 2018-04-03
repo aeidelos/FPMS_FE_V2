@@ -1,4 +1,4 @@
-import { request } from '@/utils/request'
+import { requestAPI as request } from '@/utils/request'
 import { setUser as setUserCookies } from '@/utils/auth'
 const user = {
   state: {
@@ -28,11 +28,12 @@ const user = {
   },
   actions: {
     SET_USER: ({commit}, username) => {
-      return request('post', 'check/user', 'username=' + username)
+      return request('get', 'check/user/' + username)
         .then(
           response => {
-            setUserCookies(response.object.id)
-            commit('SET_SIGNED', response.object)
+            console.log(response.data)
+            setUserCookies(response.data.id)
+            commit('SET_SIGNED', response.data)
           }
         )
     }
