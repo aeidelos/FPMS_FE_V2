@@ -47,7 +47,7 @@
 
 <script>
   import { addCourse, updateCourse, deleteCourse } from '@/api/course'
-  import { successAlert } from '@/utils/alert'
+  import { successAlert, warningAlert } from '@/utils/alert'
   import { validate } from '@/validation/course'
   export default {
     name: 'editable-course',
@@ -104,6 +104,12 @@
                 this.$emit('closediv')
               }
             })
+            .catch(error => {
+              console.log(error)
+              let msg = 'server error'
+              if (error.response.status === 409) msg = 'Kode MK sudah digunakan'
+              warningAlert('Gagal menambahkan MK : ' + msg)
+            })
         }
       },
       closeSwitch: function () {
@@ -119,6 +125,12 @@
               this.$emit('closediv')
             }
           })
+          .catch(error => {
+            console.log(error)
+            let msg = 'server error'
+            if (error.response.status === 409) msg = 'Masih terdapat praktikum aktif, silahkan hapus terlebih dahulu'
+            warningAlert('Gagal menghapus mata kuliah : ' + msg)
+          })
       },
       updateCourseAction: function () {
         if (validate(this.temp.actualCourse.courseName, this.temp.actualCourse.courseCode)) {
@@ -130,6 +142,11 @@
                 this.$emit('changelist')
                 this.$emit('closediv')
               }
+            })
+            .catch(error => {
+              console.log(error)
+              let msg = 'server error'
+              warningAlert('Gagal mengubah mata kuliah : ' + msg)
             })
         }
       }

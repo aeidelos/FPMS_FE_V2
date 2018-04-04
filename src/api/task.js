@@ -1,4 +1,4 @@
-import { requestAPI as request } from '@/utils/request'
+import { request } from '@/utils/request'
 
 export function addTask (task) {
   return request('post', 'task/', task)

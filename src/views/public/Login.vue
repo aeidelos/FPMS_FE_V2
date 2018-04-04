@@ -21,7 +21,7 @@
                     <b-button variant="primary" class="px-4" v-on:click="login">Login</b-button>
                   </b-col>
                   <b-col cols="6" class="text-right">
-                    <b-button variant="link" class="px-0">Forgot password?</b-button>
+                    <b-button variant="link" class="px-0"></b-button>
                   </b-col>
                 </b-row>
               </b-card-body>

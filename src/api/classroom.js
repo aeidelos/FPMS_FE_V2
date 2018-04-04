@@ -1,4 +1,4 @@
-import { requestAPI as request } from '@/utils/request'
+import { request } from '@/utils/request'
 
 export function getAllClassroomByPracticum (practicum) {
   return request('get', '/classroom/practicum/' + practicum.id)

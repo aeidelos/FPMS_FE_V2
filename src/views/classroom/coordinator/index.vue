@@ -8,6 +8,7 @@
 import { getPracticumByCoordinatorAssistance as getPracticumByCoordinatorAssistanceAPI } from '@/api/practicum'
 import { getAllClassroomByPracticum as getAllClassroomByPracticumAPI } from '@/api/classroom'
 import { getUser } from '@/utils/auth'
+import { warningAlert } from '@/utils/alert'
 import Classroom from './../modules'
 
 export default {
@@ -25,8 +26,11 @@ export default {
             .then(response => {
               this.classrooms = response.data
             })
-        } else {
         }
+      })
+      .catch(error => {
+        console.log(error)
+        warningAlert('Gagal mendapatkan daftar kelas : ' + error.response.data.message)
       })
   },
   data () {

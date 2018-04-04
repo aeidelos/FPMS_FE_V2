@@ -23,6 +23,7 @@
 
 <script>
 import { getDocument as getDocumentAPI } from '@/api/assignment'
+import { warningAlert } from '@/utils/alert'
 export default {
   name: 'document-viewer',
   components: {
@@ -45,6 +46,10 @@ export default {
       getDocumentAPI(docs)
         .then(response => {
           this.result = URL.createObjectURL(new Blob([response.data], {type: 'application/pdf'}))
+        })
+        .catch(error => {
+          console.log(error)
+          warningAlert('Gagal memuat dokumen : ' + error.response.data.message)
         })
     }
   },

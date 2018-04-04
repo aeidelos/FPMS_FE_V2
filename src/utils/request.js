@@ -24,6 +24,14 @@ function getTokenLocal () {
   return token === null ? getToken() : token
 }
 
+export function requestPublic (method, url, data) {
+  return Vue.axios({
+    method: method,
+    url: BaseURL + url,
+    data: data
+  })
+}
+
 export function requestAPI (method, url, data, onSuccess, onFailed) {
   return Vue.axios({
     withCredentials: true,
@@ -45,7 +53,7 @@ export function requestAPI (method, url, data, onSuccess, onFailed) {
     )
 }
 
-export function request (method, url, data, onSuccess, onFailed) {
+export function request (method, url, data) {
   return Vue.axios({
     withCredentials: true,
     method: method,
@@ -53,17 +61,6 @@ export function request (method, url, data, onSuccess, onFailed) {
     headers: { 'Authorization': 'Bearer ' + getTokenLocal() },
     data: data
   })
-    .then(
-      response => {
-        if (onSuccess !== undefined && onSuccess !== null) successAlert(onSuccess)
-        return response.data
-      }
-    )
-    .catch((error) => {
-      warningAlert(onFailed)
-      console.log(error)
-    }
-    )
 }
 
 export function requestDownload (url, data, onSuccess, onFailed) {
@@ -119,8 +116,11 @@ function auth (username, password) {
       }
     )
     .catch(
-      (response) => {
-        warningAlert('Authentikasi Gagal')
+      (error) => {
+        let msg
+        if (error.response.status === 400) msg = 'Kata sandi tidak sesuai'
+        else msg = 'Server error'
+        warningAlert('Authentikasi Gagal : ' + msg)
       }
     )
 }

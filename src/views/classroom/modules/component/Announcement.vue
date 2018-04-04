@@ -33,7 +33,7 @@
 <script>
   import { saveAnnouncement as saveAnnouncementAPI, getAnnouncement as getAnnouncementAPI }
     from '@/api/announcement'
-  import { successAlert } from '@/utils/alert'
+  import { successAlert, warningAlert } from '@/utils/alert'
   export default {
     name: 'announcement',
     props: {
@@ -84,6 +84,10 @@
         saveAnnouncementAPI(this.announcement)
           .then(response => {
             if (response.status === 201) successAlert('Pengumuman berhasil disimpan')
+          })
+          .catch(error => {
+            console.log(error)
+            warningAlert('Gagal menyimpan pengumuman : ' + error.response.data.message)
           })
       }
     },

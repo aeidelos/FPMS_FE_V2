@@ -75,6 +75,9 @@
               this.switcher.upload = 'off'
             }
           })
+          .catch(error => {
+            console.log(error)
+          })
       }
     },
     data () {
@@ -131,6 +134,10 @@
             .then(response => {
               this.document = response.data
               this.switcher.upload = 'off'
+            })
+            .catch(error => {
+              console.log(error)
+              warningAlert('Gagal mengunggah dokumen')
             })
         }
       }

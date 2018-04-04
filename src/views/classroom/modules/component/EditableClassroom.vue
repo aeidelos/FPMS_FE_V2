@@ -162,6 +162,10 @@
                 this.closediv()
               }
             })
+            .catch(error => {
+              console.log(error)
+              warningAlert('Gagal menambahkan kelas : ' + error.response.data.message)
+            })
         } else {
           warningAlert('Silahkan lengkapi form pengisian')
         }
@@ -179,6 +183,12 @@
                 this.closediv()
               }
             })
+            .catch(error => {
+              console.log(error)
+              warningAlert('Gagal mengubah kelas : ' + error.response.data.message)
+            })
+        } else {
+          warningAlert('Form tidak boleh kosong')
         }
       },
       deleteClassroom: function () {
@@ -191,6 +201,12 @@
               successAlert('Kelas berhasil dihapus')
               this.closediv()
             }
+          })
+          .catch(error => {
+            console.log(error)
+            let msg = error.response.data.message
+            if (error.response.status === 409) msg = 'masih terdapat tugas aktif'
+            warningAlert('Gagal menghapus kelas : ' + msg)
           })
       },
       closediv: function () {

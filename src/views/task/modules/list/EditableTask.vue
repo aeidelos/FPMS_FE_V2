@@ -107,7 +107,7 @@
 <script>
   import moment from 'moment'
   import { addTask as addTaskAPI, updateTask as updateTaskAPI, deleteTask as deleteTaskAPI } from '@/api/task'
-  import { successAlert } from '@/utils/alert'
+  import { successAlert, warningAlert } from '@/utils/alert'
   export default {
     name: 'editable-task',
     component: {
@@ -189,6 +189,10 @@
               this.$emit('closediv')
             }
           })
+          .catch(error => {
+            console.log(error)
+            warningAlert('Gagal menambahkan tugas : ' + error.response.data.message)
+          })
       },
       updateTask () {
         // required validation (to be implemented)
@@ -203,6 +207,10 @@
               this.$emit('closediv')
             }
           })
+          .catch(error => {
+            console.log(error)
+            warningAlert('Gagal menyimpan perubahan : ' + error.response.data.message)
+          })
       },
       deleteTask () {
         deleteTaskAPI(this.task)
@@ -214,6 +222,10 @@
               this.$emit('changelist', this.emitter)
               this.$emit('closediv')
             }
+          })
+          .catch(error => {
+            console.log(error)
+            warningAlert('Gagal menghapus tugas : ' + error.response.data.message)
           })
       },
       closeDiv () {

@@ -62,7 +62,7 @@
 import { getDocumentByClassroom as getDocumentByClassroomAPI, setGrade as setGradeAPI } from '@/api/assignment'
 import CodeViewer from './../modules/viewer/CodeViewer'
 import DocumentViewer from './../modules/viewer/DocumentViewer'
-import { successAlert } from '@/utils/alert'
+import { successAlert, warningAlert } from '@/utils/alert'
 export default {
   name: 'classroom-practicum',
   components: {
@@ -105,6 +105,10 @@ export default {
         .then(response => {
           this.documents = response.data
         })
+        .catch(error => {
+          console.log(error)
+          warningAlert('Gagal mendapatkan daftar dokumen')
+        })
     },
     setActiveDocument (document) {
       this.active = document
@@ -146,6 +150,7 @@ export default {
         })
         .catch(error => {
           console.log(error)
+          warningAlert('Gagal mengubah nilai')
         })
     },
     viewPlagiarized (assignment) {

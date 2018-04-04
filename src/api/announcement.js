@@ -1,4 +1,4 @@
-import { requestAPI as request } from '@/utils/request'
+import { request } from '@/utils/request'
 
 export function saveAnnouncement (announcement) {
   return request('put', '/announcement', announcement)

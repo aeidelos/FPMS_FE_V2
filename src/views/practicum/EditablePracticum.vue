@@ -32,7 +32,7 @@
                         <!----><small class="form-text text-muted">Masukkan Judul Praktikum</small></div>
                     </div>
                 </div>
-                <div role="group" class="b-form-group form-group" id="__BVID__340_" aria-labelledby="__BVID__340___BV_label_">
+                <div v-if="mode!='add'" role="group" class="b-form-group form-group" id="__BVID__340_" aria-labelledby="__BVID__340___BV_label_">
                     <div class="form-row"><label for="horizPass" class="col-sm-3 col-form-label" id="__BVID__340___BV_label_">Koordinator Assisten</label>
                         <div class="col-sm-9">
                         <div v-if="editCoordinator=='off'">
@@ -143,6 +143,10 @@
                 this.$emit('closediv')
               }
             })
+            .catch(error => {
+              console.log(error)
+              warningAlert('Gagal menambahkan praktikum : Server error')
+            })
         } else {
           warningAlert('Silahkan isi form terlebih dahulu')
         }
@@ -186,9 +190,12 @@
               successAlert('Praktikum berhasil dihapus')
               this.$emit('changelist')
               this.$emit('closediv')
-            } else {
-              warningAlert('Gagal menghapus praktikum')
             }
+          })
+          .catch(error => {
+            let msg = 'server error'
+            if (error.response.status === 409) msg = 'Masih terdapat kelas praktikum aktif'
+            warningAlert('Gagal menghapus praktikum : ' + msg)
           })
       },
       updatePracticum: function () {
@@ -198,9 +205,11 @@
               successAlert('Data praktikum berhasil diubah')
               this.$emit('changelist')
               this.$emit('closediv')
-            } else {
-              warningAlert('Gagal menyimpan perubahan praktikum')
             }
+          })
+          .catch(error => {
+            console.log(error)
+            warningAlert('Gagal menyimpan perubahan praktikum : Server error')
           })
       }
     },

@@ -52,8 +52,12 @@ export default {
         if (response.status === 200) {
           this.assignments = response.data
         } else {
-          warningAlert('Gagal mendapatkan data')
+          warningAlert('Gagal mendapatkan data kelas')
         }
+      })
+      .catch(error => {
+        console.log(error)
+        warningAlert('Gagal mendapatkan data kelas')
       })
   },
   data () {

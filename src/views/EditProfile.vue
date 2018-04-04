@@ -10,7 +10,7 @@
                                 <fieldset id="__BVID__190" role="group" class="b-form-group form-group">
                                     <div role="group" class="">
                                         <label for="name">Nama</label> 
-                                        <input id="name" type="text" placeholder="Masukkan nama anda" class="form-control">
+                                        <input v-model="user.name" id="name" type="text" placeholder="Masukkan nama anda" class="form-control">
                                     </div>
                                 </fieldset>
                             </div>
@@ -20,7 +20,7 @@
                                 <fieldset id="__BVID__191" role="group" class="b-form-group form-group">
                                     <div role="group" class="">
                                         <label for="nim">NIM</label> 
-                                        <input id="nim" type="text" placeholder="Masukkan NIM" class="form-control">
+                                        <input v-model="user.identity" id="nim" type="text" placeholder="Masukkan NIM" class="form-control">
                                     </div>
                                 </fieldset>
                             </div>
@@ -29,8 +29,8 @@
                             <div class="col-sm-12">
                                 <fieldset id="__BVID__192" role="group" class="b-form-group form-group">
                                     <div role="group" class="">
-                                        <label for="jurusan">Jurusan</label> 
-                                        <input id="jurusan" type="text" placeholder="Masukkan Jurusan" class="form-control">
+                                        <label for="jurusan">Email</label> 
+                                        <input v-model="user.username" type="text" placeholder="Masukkan Email" class="form-control">
                                     </div>
                                 </fieldset>
                             </div>
@@ -38,7 +38,7 @@
                         <div class="row text-center">
                             <div class="col-sm-12 ">
                                 <div class="form-group form-actions ">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" @click="updateProfile()" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>
                         </div>
@@ -94,17 +94,50 @@
 </template>
 
 <script>
+import { update as updateAPI } from '@/api/user'
+import { successAlert, warningAlert } from '@/utils/alert'
 export default {
   name: 'edit-profil',
   mounted () {
+    this.user = this.$store.getters.user
   },
   data () {
     return {
+      user: {}
     }
   },
   computed: {
+    isValidUser () {
+      return this.user.username !== '' && this.user.name !== '' && this.user.identity !== ''
+    }
   },
   methods: {
+    updateProfile () {
+      let user = {
+        email: this.user.username,
+        password: this.user.password,
+        role: this.user.roles,
+        name: this.user.name,
+        identity: this.user.identity,
+        id: this.user.id
+      }
+      if (this.isValidUser) {
+        updateAPI(user)
+          .then(response => {
+            if (response.status === 200) {
+              successAlert('Pengguna berhasil diubah')
+              this.$store.dispatch('SET_USER', response.data.email)
+            }
+          })
+          .catch(error => {
+            let msg = 'Server error'
+            if (error.response.status === 409) msg = 'NIM/Email digunakan pengguna lain'
+            warningAlert('Gagal mengubah data pengguna : ' + msg)
+          })
+      } else {
+        warningAlert('Silahkan lengkapi profil')
+      }
+    }
   }
 }
 </script>

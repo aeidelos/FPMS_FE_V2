@@ -72,7 +72,12 @@ export default {
             this.codeResult = response.data
           }
         })
-        .catch(warningAlert('Server error - Code Compiler Offline'))
+        .catch(error => {
+          console.log(error)
+          let msg = ''
+          if (error.response.data === 403) msg = 'Terjadi kesalahan pada server kompiler'
+          warningAlert('Gagal menjalankan kode program : ' + msg + ' / ' + error.response.data.message)
+        })
     }
   },
   mounted () {
@@ -90,6 +95,10 @@ export default {
               this.result.push(res)
               this.switcher.data = res
             }
+          })
+          .catch(error => {
+            console.log(error)
+            warningAlert('Gagal memuat kode program : ' + error.response.data.message)
           })
       })
     }

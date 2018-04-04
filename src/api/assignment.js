@@ -1,4 +1,4 @@
-import { requestAPI as request, requestDownload } from '@/utils/request'
+import { request, requestDownload } from '@/utils/request'
 
 export function getAssignmentInformation (assignment, user) {
   return request('get', 'file/information/' + assignment.id + '/' + user.id)
