@@ -142,7 +142,7 @@
 <script>
 import { getDashboard as getDashboardAPI } from '@/api/assignment'
 import { getByEnrollmentKey, updateClassroom } from '@/api/classroom'
-import { confirmationAlert, successAlert } from '@/utils/alert'
+import { confirmationAlert, successAlert, warningAlert } from '@/utils/alert'
 export default {
   name: 'dashboard',
   mounted () {
@@ -210,6 +210,10 @@ export default {
               }
             )
           }
+        })
+        .catch(error => {
+          console.log(error)
+          warningAlert('Gagal masuk ke kelas : ' + error.response.data.message)
         })
     }
   }

@@ -14,13 +14,13 @@
       <div class="card-body">
         <div v-for="assignment in document">
           <div class="row" style="padding:0px; margin:0px;">
-            <div class="card" style="padding:20px;">
+            <div class="card col-md-12" style="padding:20px;">
               <div class="row">
                 <p>Nama file : </p>
               </div>
               <div class="row">
                 <ul>
-                  <li v-for="file in assignment">{{ file.document.filename }}</li>
+                  <li v-for="file in assignment">{{ filterName(file.document.filename) }}</li>
                 </ul>
               </div>
               <div class="row">
@@ -32,12 +32,12 @@
                 </div>  
               </div>
               <div class="row">
-                <p>Plagiasi : {{ getAveragePlagiarism(assignment) }}</p>
+                <p>Plagiasi : {{ getAveragePlagiarism(assignment) }} %</p>
               </div>
               <div class="row">
                 <div class="pull-right">
                   <button class="btn btn-primary" v-on:click="setActiveViewer(assignment)">Lihat Dokumen</button>
-                  <button class="btn btn-danger" v-on:click="viewPlagiarized(assignment)" >Dokumen Terplagiasi</button>
+                  <button class="btn btn-danger" v-if="getAveragePlagiarism(assignment) > 80" v-on:click="viewPlagiarized(assignment)" >Dokumen Terplagiasi</button>
                 </div>
               </div>
             </div>
@@ -110,6 +110,9 @@ export default {
           warningAlert('Gagal mendapatkan daftar dokumen')
         })
     },
+    filterName (filename) {
+      return filename.substr(0, 20)
+    },
     setActiveDocument (document) {
       this.active = document
     },
@@ -137,7 +140,7 @@ export default {
       for (const file in assignment) {
         if (assignment[file].plagiarism !== null && assignment[file].plagiarism !== undefined && assignment[file].plagiarism !== '') sum += assignment[file].plagiarism.rate
       }
-      return sum / assignment.length
+      return Math.round(sum / assignment.length)
     },
     setGrade (document) {
       setGradeAPI(document.id, this.switcher.gradeValue)

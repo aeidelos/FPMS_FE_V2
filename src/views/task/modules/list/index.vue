@@ -3,7 +3,7 @@
         <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="card border" style="min-height:450px;">
                 <div class="card-body">
-                      <button class="btn btn-primary pull-right" v-on:click="switchAddTask"><i class="fa fa-plus"></i>Tambah Baru</button>
+                      <button v-if="role == 'assistance' || role == 'coordinator'" class="btn btn-primary pull-right" v-on:click="switchAddTask"><i class="fa fa-plus"></i>Tambah Baru</button>
                     <br><br><br>
                     <div v-if="switcher.editableTask == 'on'">
                         <editable-task v-bind:practicum="practicum" v-bind:classroom="classroom" v-bind:mode="switcher.editableMode"
@@ -21,14 +21,15 @@
                     <div class="card">
                         <div class="card-body" style="min-height:300px;">
                             <div v-if="getActiveTasks.length>0" v-for="task in getActiveTasks" class="card">
+                              <div v-if="currentlyActive(task) == true">
                                 <div class="card-body">
                                     <div class="row" style="margin:20px">
-                                      <div class="col-sm-10">
+                                      <div class="col-sm-8">
                                         <h3><strong>{{ task.title }}</strong></h3>
                                       </div>
-                                      <div class="col-sm-2">
-                                        <button v-on:click="switchDeleteTask(task)" class="btn btn-danger pull-right"><i class="fa fa-close"></i></button>
-                                        <button v-on:click="switchEditTask(task)" class="btn pull-right"><i class="fa fa-edit"></i></button>
+                                      <div class="col-sm-4">
+                                        <button v-if="role != 'practican' && isTheCreator(task) == true" v-on:click="switchDeleteTask(task)" class="btn btn-danger pull-right"><i class="fa fa-close">Hapus</i></button>
+                                        <button v-if="role != 'practican' && isTheCreator(task) == true" v-on:click="switchEditTask(task)" class="btn pull-right"><i class="fa fa-edit"></i>Sunting</button>
                                       </div>
                                     </div>
                                     <div style="margin-left:30px">
@@ -47,7 +48,7 @@
                                             <p>{{ task.createdBy.name }}</p>
                                           </div>
                                           <div class="row">
-                                            <strong><p>Lampiran</p></strong>
+                                            <strong><p>Unggahan</p></strong>
                                           </div>
                                           <div class="row">
                                             <ol>
@@ -85,9 +86,9 @@
                                     <div class="row" style="margin-bottom:30px;">
                                       <div class="col-sm-12 col-md-12">
                                         <div v-if="task.id != switcher.viewUpload">
-                                           <button class="btn btn-primary pull-right" 
+                                           <button v-if="role =='assistance' || role=='coordinator'" class="btn btn-primary pull-right" 
                                            v-on:click="switchToNextRouteClassroom(classroom,task)">Lihat Pengumpulan</button>
-                                           <button style="margin-right:3px;" class="btn btn-success pull-right" v-on:click="viewUpload(task)">Unggah Pengerjaan</button>
+                                           <button v-if="role == 'practican' && isNotLate(task)" style="margin-right:3px;" class="btn btn-success pull-right" v-on:click="viewUpload(task)">Unggah Pengerjaan</button>
                                         </div>
                                       </div>
                                     </div>
@@ -106,6 +107,7 @@
                                       </div>
                                     </div>
                                 </div>
+                              </div>
                             </div>
                         </div>
                     </div>
@@ -116,6 +118,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import EditableTask from './EditableTask'
 import UploaderTask from './../upload'
 import CodeViewer from './../viewer/CodeViewer'
@@ -150,6 +153,11 @@ export default {
       type: Object,
       default: null,
       require: false
+    },
+    role: {
+      type: String,
+      default: null,
+      require: true
     }
   },
   mounted () {
@@ -183,6 +191,34 @@ export default {
     viewDocument (document) {
       this.activeViewer.data = document
       this.switcher.viewer = 'on'
+    },
+    isNotLate (task) {
+      if (task.allowLate === true) {
+        return true
+      } else {
+        let date = moment(task.dueDate, 'DD-MM-YYYY hh:mm:ss').toDate()
+        let late = new Date() <= date
+        console.log(date)
+        console.log(new Date())
+        console.log(late)
+        return late
+      }
+    },
+    getUser () {
+      return this.$store.getters.user
+    },
+    isTheCreator (task) {
+      console.log(task.createdBy.id)
+      console.log(this.getUser().id)
+      let allow = false
+      if (task.createdBy.id === this.getUser().id) {
+        allow = true
+      }
+      return allow
+    },
+    currentlyActive (task) {
+      let date = moment(task.createdDate, 'DD-MM-YYYY hh:mm:ss').toDate()
+      return new Date() > date
     },
     closeViewer (type) {
       this.activeViewer.data = {}

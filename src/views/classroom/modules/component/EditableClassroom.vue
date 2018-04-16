@@ -65,7 +65,7 @@
                                 <li v-for="assistance in temp.actualClassroom.assistance">{{ assistance.identity }} - {{ assistance.name }}</li>
                                 </ol></p>
                             </div>
-                            <small v-if="mode=='edit' || mode=='add'" class="form-text text-muted" id="__BVID__338___BV_description_"><a v-on:click="switchEditAssistance">Ubah</a></small></div>
+                            <small v-if="role == 'coordinator' && (mode=='edit' || mode=='add')" class="form-text text-muted" id="__BVID__338___BV_description_"><a v-on:click="switchEditAssistance">Ubah</a></small></div>
                     </div>
                 </div>
 
@@ -100,6 +100,10 @@
       practicum: {
         type: Object,
         required: false
+      },
+      role: {
+        type: String,
+        required: true
       }
     },
     mounted () {

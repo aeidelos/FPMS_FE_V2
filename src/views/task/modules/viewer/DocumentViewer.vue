@@ -1,7 +1,7 @@
 <template>
   <div class="animated fadeIn">
     <div class="row">
-      <b-modal title="Modal title" hide-footer size="lg" v-model="modal" 
+      <b-modal title="Document Viewer" hide-footer size="lg" v-model="modal" 
        hide-header-close no-close-on-backdrop no-close-on-esc>
         <div class="col-md-12">
           <div v-if="filterExtension == 'pdf'">

@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn">
-      <task-list v-bind:tasks="tasks" v-bind:classroom="classroom"></task-list>
+      <task-list v-bind:tasks="tasks" v-bind:role="role" v-bind:classroom="classroom"></task-list>
   </div>
 </template>
 
@@ -16,6 +16,11 @@ export default {
   props: {
     classroom: {
       type: Object,
+      default: null,
+      required: false
+    },
+    role: {
+      type: String,
       default: null,
       required: false
     }

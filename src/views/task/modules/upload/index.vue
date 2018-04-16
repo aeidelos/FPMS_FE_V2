@@ -18,6 +18,8 @@
                                     <button class="btn btn-warning btn-sm" v-on:click="closeView" >Tutup</button>
                                   </div>
                                   <div v-else>
+                                      <button v-if="getIsPlagiarized(document) == false" class="btn btn-success">Bebas Plagiasi</button>
+                                      <button v-else class="btn btn-danger">Terdeteksi Plagiasi</button>
                                       <button class="btn btn-success" v-on:click="fileView(document)">Lihat</button>
                                       <button class="btn btn-primary" v-on:click="switcher.upload = 'on'">Ubah</button>
                                   </div>
@@ -49,7 +51,7 @@
 <script>
   import { getAssignmentInformation as getAssignmentInformationAPI,
     uploadAssignment as uploadAssignmentAPI } from '@/api/assignment'
-  import { warningAlert } from '@/utils/alert'
+  import { warningAlert, successAlert } from '@/utils/alert'
   export default {
     name: 'upload-task',
     component: {
@@ -112,6 +114,16 @@
       }
     },
     methods: {
+      getIsPlagiarized (document) {
+        let res = false
+        document.forEach(doc => {
+          if (doc.markAsPlagiarized === true) {
+            res = true
+          }
+        })
+        console.log(res)
+        return res
+      },
       fileView (docs) {
         this.$emit('viewDocument', docs)
       },
@@ -122,7 +134,7 @@
         this.file = event.target.files
       },
       fileUpload () {
-        if (this.file === null) {
+        if (this.file === null || this.file.length === 0) {
           warningAlert('File tidak boleh kosong')
         } else {
           const uploader = new FormData()
@@ -134,6 +146,10 @@
             .then(response => {
               this.document = response.data
               this.switcher.upload = 'off'
+              if (response.status === 200) {
+                successAlert('Berhasil mengunggah dokumen')
+                this.file = []
+              }
             })
             .catch(error => {
               console.log(error)
