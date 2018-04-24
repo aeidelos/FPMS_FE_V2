@@ -31,3 +31,7 @@ export function setGrade (idDocument, grade) {
 export function getDashboard (user) {
   return request('get', 'assignment/dashboard/' + user.id)
 }
+
+export function getExportedGrade (classroom) {
+  return request('get', 'assignment/export/' + classroom.id)
+}

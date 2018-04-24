@@ -11,6 +11,8 @@ Vue.use(store)
 
 const BaseURL = 'http://localhost:8000/'
 
+// const BaseURL = 'http://e34b9ba5.ngrok.io/'
+
 const ApplicationAuth = {
   username: 'rma',
   password: 'rma'

@@ -1,6 +1,6 @@
 <template>
  <div id="accordion" role="tablist" class="fadeIn animated row">
-  <div class="card col-md-6 col-sm-12" v-for="(document,index) in documents" :key="index">
+  <div class="card col-md-12 col-sm-12" v-for="(document,index) in documents" :key="index">
     <div class="card-header" role="tab" :id="'heading'+ index" v-on:click="setActiveDocument(Object.keys(document)[0])" >
       <h5 class="mb-0">
         <a :data-toggle="'collapse'+index" aria-expanded="true" :aria-controls="'collapse'+index">
@@ -14,7 +14,7 @@
       <div class="card-body">
         <div v-for="assignment in document">
           <div class="row" style="padding:0px; margin:0px;">
-            <div class="card col-md-12" style="padding:20px;">
+            <div class="card col-md-12" style="padding:50px;">
               <div class="row">
                 <p>Nama file : </p>
               </div>
@@ -111,7 +111,7 @@ export default {
         })
     },
     filterName (filename) {
-      return filename.substr(0, 20)
+      return filename.substr(0, 80)
     },
     setActiveDocument (document) {
       this.active = document

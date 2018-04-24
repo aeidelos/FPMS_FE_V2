@@ -6,11 +6,16 @@
                 <resource-empty v-bind:title="title" style="min-height:450px;"></resource-empty>
               </div>
               <div v-else>
-                  <button v-if="role === coordinator" v-on:click="addClassroom" style="margin-top:5px; margin-right:5px;" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Tambah Baru</button><br>
+                  <button v-if="role == 'coordinator'" v-on:click="addClassroom" style="margin-top:5px; margin-right:5px;" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Tambah Baru</button><br>
                 <div class="card-body" style="margin-top:10px;">
                     <div v-if="switcher.announcement == 'on'" >
                       <announcement  v-on:closediv="switcher.announcement = 'off'; temp.selectedClassroom = null;"
                        v-bind:classroom="temp.selectedClassroom"></announcement>
+                    </div>
+                    <div v-if="switcher.gradeExport == 'on'">
+                      <grade-export v-bind:classroom="temp.selectedClassroom" v-bind:grades="temp.grades"
+                      v-on:closediv="switcher.gradeExport = 'off'; temp.selectedClassroom=null;temp.grades = null;"
+                      ></grade-export>
                     </div>
                     <div v-if="switcher.editableClassroom == 'on'">
                       <div v-if="switcher.editableMode=='add'"><editable-classroom  v-bind:role = "role" v-bind:practicum="practicum" v-on:closediv="switchEditableClassroom" v-on:changelist="updateClassroomList" act='add'></editable-classroom></div>
@@ -53,7 +58,8 @@
                               <br>
                               <div>
                                  <button v-if="role == 'assistance'" style="margin-right:3px;" class="btn btn-md btn-primary pull-left" @click="activeAnnouncement(classroom)">Pengumuman</button>
-                                 <button class="btn btn-md btn-success pull-left" @click="switchToNextRouteClassroom(classroom)">Tugas & Laporan</button>
+                                 <button style="margin-right:3px;" class="btn btn-md btn-success pull-left" @click="switchToNextRouteClassroom(classroom)">Tugas & Laporan</button>
+                                 <button style="margin-right:3px;" class="btn btn-md btn-success pull-left" @click="exportGrade(classroom)">Export Nilai</button>
                               </div>
                             </div>
                     </div>
@@ -68,12 +74,15 @@
 import EditableClassroom from './component/EditableClassroom'
 import ResourceEmpty from '@/components/ResourceEmpty'
 import Announcement from './component/Announcement'
+import GradeExport from './component/GradeExport'
+import { getExportedGrade } from '@/api/assignment'
 export default {
   name: 'classroom',
   components: {
     EditableClassroom,
     ResourceEmpty,
-    Announcement
+    Announcement,
+    GradeExport
   },
   props: {
     classrooms: {
@@ -101,12 +110,14 @@ export default {
   data () {
     return {
       temp: {
-        selectedClassroom: {}
+        selectedClassroom: {},
+        grades: {}
       },
       switcher: {
         editableClassroom: 'off',
         editableMode: 'add',
-        announcement: 'off'
+        announcement: 'off',
+        gradeExport: 'off'
       },
       title: ''
     }
@@ -151,6 +162,15 @@ export default {
         }
         this.classrooms = Object.assign([], classroomTemp)
       }
+    },
+    exportGrade (classroom) {
+      getExportedGrade(classroom)
+        .then(response => {
+          this.temp.selectedClassroom = classroom
+          this.temp.grades = response.data
+          this.switcher.gradeExport = 'on'
+        })
+        .catch(error => console.log(error))
     }
   }
 }
