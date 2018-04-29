@@ -22,6 +22,7 @@
               </div>
               <br>
               <button @click="closeViewer()" class="btn btn-danger btn-sm pull-right">Tutup</button>
+              <button v-if="announcement != ''" @click="deleteAnnouncement()" class="btn btn-warning btn-sm pull-right">Hapus</button>
               <button @click="saveAnnouncement()" class="btn btn-success btn-sm pull-right">Simpan</button>
             </div>
           </div>
@@ -31,7 +32,7 @@
 </template>
 
 <script>
-  import { saveAnnouncement as saveAnnouncementAPI, getAnnouncement as getAnnouncementAPI }
+  import { saveAnnouncement as saveAnnouncementAPI, getAnnouncement as getAnnouncementAPI, deleteAnnouncement as deleteAnnouncementAPI }
     from '@/api/announcement'
   import { successAlert, warningAlert } from '@/utils/alert'
   export default {
@@ -81,13 +82,30 @@
         this.$emit('closediv')
       },
       saveAnnouncement () {
+        console.log(1)
+        console.log(this.announcement)
         saveAnnouncementAPI(this.announcement)
           .then(response => {
-            if (response.status === 201) successAlert('Pengumuman berhasil disimpan')
+            if (response.status === 201) {
+              successAlert('Pengumuman berhasil disimpan')
+              this.closeViewer()
+            }
           })
           .catch(error => {
             console.log(error)
             warningAlert('Gagal menyimpan pengumuman : ' + error.response.data.message)
+          })
+      },
+      deleteAnnouncement () {
+        deleteAnnouncementAPI(this.announcement)
+          .then(response => {
+            if (response.status === 200) {
+              successAlert('Pengumuman berhasil dihapus')
+              this.closeViewer()
+            }
+          })
+          .catch(error => {
+            console.log(error)
           })
       }
     },

@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <AppHeader/>
+    <AppHeader v-bind:user="user"/>
     <div class="app-body">
       <Sidebar :navItems="nav" :roles="getUser().roles"/>
       <main class="main">
@@ -32,6 +32,8 @@ export default {
       this.$router.push('/public/login')
     }
     this.$store.dispatch('SET_USER', getUsername())
+    this.user = this.getUser()
+    console.log(this.user)
   },
   methods: {
     getUser () {
@@ -40,7 +42,8 @@ export default {
   },
   data () {
     return {
-      nav: nav.items
+      nav: nav.items,
+      user: {}
     }
   },
   computed: {

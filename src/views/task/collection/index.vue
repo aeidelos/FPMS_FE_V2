@@ -20,7 +20,28 @@
               </div>
               <div class="row">
                 <ul>
-                  <li v-for="file in assignment">{{ filterName(file.document.filename) }}</li>
+                  <li v-for="file in assignment">
+                    {{ getFileName(file.document.filename) }}
+                    <span v-if="file.document.markAsPlagiarized" class="badge badge-danger">
+                      terplagiasi
+                    </span>
+                    <span v-if="file.plagiarism.rate>=50" class="badge badge-warning">
+                      similarity = {{ file.plagiarism.rate.toFixed(2) }}
+                    </span>
+                    <span v-else-if="file.plagiarism.rate<50" class="badge badge-primary">
+                      similarity = {{ file.plagiarism.rate.toFixed(2) }}
+                    </span>
+                    <span class="badge badge-info" v-on:click="viewPlagiarized(file)">
+                      lihat dokumen pembanding
+                    </span>
+                    <span @click="setPlagiarizedStatus(file.document, false)" class="badge badge-success" v-if="file.document.markAsPlagiarized">
+                      tandai bukan plagiasi
+                    </span>
+                    <span @click="setPlagiarizedStatus(file.document, true)" class="badge badge-danger" v-else-if="file.document.markAsPlagiarized == false">
+                      tandai sebagai plagiasi
+                    </span>
+                    <span></span>
+                    </li>
                 </ul>
               </div>
               <div class="row">
@@ -32,13 +53,9 @@
                 </div>  
               </div>
               <div class="row">
-                <p>Plagiasi : {{ getAveragePlagiarism(assignment) }} %</p>
-              </div>
-              <div class="row">
-                <div class="pull-right">
-                  <button class="btn btn-primary" v-on:click="setActiveViewer(assignment)">Lihat Dokumen</button>
-                  <button class="btn btn-danger" v-if="getAveragePlagiarism(assignment) > 80" v-on:click="viewPlagiarized(assignment)" >Dokumen Terplagiasi</button>
-                </div>
+                <div class="col-sm-12 col-md-12">
+                  <button class="btn btn-primary pull-right" v-on:click="setActiveViewer(assignment)">Lihat Dokumen</button>
+                 </div>
               </div>
             </div>
           </div> 
@@ -59,7 +76,7 @@
 
 
 <script>
-import { getDocumentByClassroom as getDocumentByClassroomAPI, setGrade as setGradeAPI } from '@/api/assignment'
+import { getDocumentByClassroom as getDocumentByClassroomAPI, setGrade as setGradeAPI, setPlagiarized } from '@/api/assignment'
 import CodeViewer from './../modules/viewer/CodeViewer'
 import DocumentViewer from './../modules/viewer/DocumentViewer'
 import { successAlert, warningAlert } from '@/utils/alert'
@@ -100,6 +117,10 @@ export default {
     }
   },
   methods: {
+    getFileName (longName) {
+      let split = longName.split('/')
+      return split[3]
+    },
     getDocumentByClassroom () {
       getDocumentByClassroomAPI(this.task, this.classroom)
         .then(response => {
@@ -107,7 +128,7 @@ export default {
         })
         .catch(error => {
           console.log(error)
-          warningAlert('Gagal mendapatkan daftar dokumen')
+          warningAlert('Belum ada yang mengumpulkan dokumen')
         })
     },
     filterName (filename) {
@@ -127,6 +148,15 @@ export default {
       let obj = document[docid]
       let name = obj[0].document.practican.name
       return name
+    },
+    setPlagiarizedStatus (document, status) {
+      setPlagiarized(document.id, status)
+        .then(response => {
+          if (response.status === 200) {
+            successAlert('Berhasil mengubah status plagiasi')
+            document.markAsPlagiarized = status
+          }
+        })
     },
     getAverageAssignment (assignment) {
       var sum = 0
@@ -158,10 +188,10 @@ export default {
     },
     viewPlagiarized (assignment) {
       var doc
-      if (assignment[0].document.id === assignment[0].plagiarism.document1.id) {
-        doc = assignment[0].plagiarism.document2
+      if (assignment.document.id === assignment.plagiarism.document1.id) {
+        doc = assignment.plagiarism.document2
       } else {
-        doc = assignment[0].plagiarism.document1
+        doc = assignment.plagiarism.document1
       }
       var temp = {document: doc}
       var arr = []

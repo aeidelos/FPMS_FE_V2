@@ -28,6 +28,10 @@ export function setGrade (idDocument, grade) {
   return request('post', '/assignment/grade/set', 'idDocument=' + idDocument + '&grade=' + grade)
 }
 
+export function setPlagiarized (idDocument, status) {
+  return request('post', '/assignment/status/set', 'idDocument=' + idDocument + '&status=' + status)
+}
+
 export function getDashboard (user) {
   return request('get', 'assignment/dashboard/' + user.id)
 }

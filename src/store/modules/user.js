@@ -28,7 +28,7 @@ const user = {
   },
   actions: {
     SET_USER: ({commit}, username) => {
-      return request('get', 'check/user/' + username)
+      return request('post', 'check/user/', 'username=' + username)
         .then(
           response => {
             console.log(response.data)

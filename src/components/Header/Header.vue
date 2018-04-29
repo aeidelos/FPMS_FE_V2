@@ -10,6 +10,7 @@
     <b-navbar-nav class="d-md-down-none">
     </b-navbar-nav>
     <b-navbar-nav class="ml-auto">
+      <span>{{ user.name }} / {{ getUserAndStudy(user.identity) }}</span>
       <header-dropdown></header-dropdown>
     </b-navbar-nav>
   </header>
@@ -19,10 +20,21 @@
 
   export default {
     name: 'c-header',
+    props: {
+      user: {
+        required: true
+      }
+    },
+    mounted () {
+    },
     components: {
       HeaderDropdown
     },
     methods: {
+      getUserAndStudy (identity) {
+        if (identity.substring(2, 5) === '5150') return 'Informatika'
+        else return ' - '
+      },
       sidebarToggle (e) {
         e.preventDefault()
         document.body.classList.toggle('sidebar-hidden')

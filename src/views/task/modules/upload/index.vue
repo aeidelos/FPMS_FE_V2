@@ -7,21 +7,24 @@
                         <div class="">
                           <div class="row ">
                             <div class="col-md-12">
-                              <div class="col-md-12 attachment-title">Lampiran : {{ assignment.description }}</div>
+                              <div class="col-md-12 attachment-title">Lampiran : {{ assignment.description }}
+                                <div v-if="document.length>0">
+                                  <span v-if="getIsPlagiarized(document) == false" class="badge badge-success">bebas plagiasi</span>
+                                  <span v-else class="badge badge-danger">ditandai sebagai plagiasi</span>
+                                </div>
+                              </div>
                               <div class="col-md-12">
                                 <div v-if="switcher.upload == 'on'" class="attachment-content">
                                     <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-if="getFileSingleOrMultiple" multiple type="file" v-on:change="fileChange">
                                     <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-else type="file" v-on:change="fileChange">
                                     <button class="btn btn-primary btn-sm" v-on:click="fileUpload">Upload</button>
-                                    <button class="btn btn-danger btn-sm" v-if="document != null"
+                                    <button class="btn btn-danger btn-sm" v-if="document.length>0"
                                     v-on:click="switcher.upload = 'off'">Batal</button>
                                     <button class="btn btn-warning btn-sm" v-on:click="closeView" >Tutup</button>
                                   </div>
                                   <div v-else>
-                                      <button v-if="getIsPlagiarized(document) == false" class="btn btn-success">Bebas Plagiasi</button>
-                                      <button v-else class="btn btn-danger">Terdeteksi Plagiasi</button>
                                       <button class="btn btn-success" v-on:click="fileView(document)">Lihat</button>
-                                      <button class="btn btn-primary" v-on:click="switcher.upload = 'on'">Ubah</button>
+                                      <button class="btn btn-primary" v-if="isNotLate" v-on:click="switcher.upload = 'on'">Unggah Berkas</button>
                                   </div>
                               </div>
                             </div>
@@ -66,6 +69,11 @@
         type: Object,
         default: null,
         required: false
+      },
+      isNotLate: {
+        type: Boolean,
+        default: false,
+        required: true
       }
     },
     mounted () {

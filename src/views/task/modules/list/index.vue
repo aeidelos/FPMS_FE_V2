@@ -75,10 +75,11 @@
                                     </div>
                                     <div class="row">
                                       <div class="col-md-12 col-sm-12">
-                                        <div v-for="assignment in task.assignments">
+                                        <div v-for="assignment in task.assignments" :key="assignment.id">
                                           <uploader-task v-bind:assignment="assignment" 
                                           v-bind:practican="getActiveUser" v-if="task.id == switcher.viewUpload"
                                           v-on:viewDocument="viewDocument" v-on:closeViewer="viewUpload(null)"
+                                          v-bind:isNotLate="isNotLate(task)"
                                           ></uploader-task>
                                         </div>
                                       </div>
@@ -88,7 +89,7 @@
                                         <div v-if="task.id != switcher.viewUpload">
                                            <button v-if="role =='assistance' || role=='coordinator'" class="btn btn-primary pull-right" 
                                            v-on:click="switchToNextRouteClassroom(classroom,task)">Lihat Pengumpulan</button>
-                                           <button v-if="role == 'practican' && isNotLate(task)" style="margin-right:3px;" class="btn btn-success pull-right" v-on:click="viewUpload(task)">Unggah Pengerjaan</button>
+                                           <button v-if="role == 'practican'" style="margin-right:3px;" class="btn btn-success pull-right" v-on:click="viewUpload(task)">Pengerjaan</button>
                                         </div>
                                       </div>
                                     </div>
@@ -198,9 +199,6 @@ export default {
       } else {
         let date = moment(task.dueDate, 'DD-MM-YYYY hh:mm:ss').toDate()
         let late = new Date() <= date
-        console.log(date)
-        console.log(new Date())
-        console.log(late)
         return late
       }
     },

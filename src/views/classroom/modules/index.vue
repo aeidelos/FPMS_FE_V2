@@ -51,7 +51,7 @@
                                   </div>
                                   <br>
                                   <div class="col-md-3 col-sm-12">
-                                    <span><strong>Dosen Pengampu</strong></span> <br> to be implemented
+                                    <span><strong>Jadwal Praktikum</strong></span> <br> {{ classroom.date }}
                                   </div>
                                   <br>
                               </div>
@@ -59,7 +59,7 @@
                               <div>
                                  <button v-if="role == 'assistance'" style="margin-right:3px;" class="btn btn-md btn-primary pull-left" @click="activeAnnouncement(classroom)">Pengumuman</button>
                                  <button style="margin-right:3px;" class="btn btn-md btn-success pull-left" @click="switchToNextRouteClassroom(classroom)">Tugas & Laporan</button>
-                                 <button style="margin-right:3px;" class="btn btn-md btn-success pull-left" @click="exportGrade(classroom)">Export Nilai</button>
+                                 <button v-if="role == 'assistance' || role== 'coordinator'"style="margin-right:3px;" class="btn btn-md btn-success pull-left" @click="exportGrade(classroom)">Rekap Nilai</button>
                               </div>
                             </div>
                     </div>
