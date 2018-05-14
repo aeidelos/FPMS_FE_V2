@@ -22,7 +22,7 @@
               </div>
               <br>
               <button @click="closeViewer()" class="btn btn-danger btn-sm pull-right">Tutup</button>
-              <button v-if="announcement != ''" @click="deleteAnnouncement()" class="btn btn-warning btn-sm pull-right">Hapus</button>
+              <button v-if="announcement.id != ''" @click="deleteAnnouncement()" class="btn btn-warning btn-sm pull-right">Hapus</button>
               <button @click="saveAnnouncement()" class="btn btn-success btn-sm pull-right">Simpan</button>
             </div>
           </div>
@@ -67,6 +67,7 @@
       return {
         modal: true,
         announcement: {
+          id: '',
           title: '',
           description: '',
           classroom: this.classroom,

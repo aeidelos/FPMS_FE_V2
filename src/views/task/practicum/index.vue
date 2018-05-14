@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn">
-      <task-list v-bind:tasks="tasks" v-bind:practicum="practicum"></task-list>
+      <task-list v-bind:tasks="tasks" v-bind:role="role" v-bind:practicum="practicum"></task-list>
   </div>
 </template>
 
@@ -47,7 +47,8 @@ export default {
           type: Array,
           default: null
         }
-      }
+      },
+      role: 'coordinator'
     }
   }
 }

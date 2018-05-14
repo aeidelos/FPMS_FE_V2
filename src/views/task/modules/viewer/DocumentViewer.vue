@@ -4,6 +4,7 @@
       <b-modal title="Document Viewer" hide-footer size="lg" v-model="modal" 
        hide-header-close no-close-on-backdrop no-close-on-esc>
         <div class="col-md-12">
+          <p>Nama/NIM Mahasiswa : {{ getIdentity }} </p>
           <div v-if="filterExtension == 'pdf'">
           <object  type="application/pdf" style="height:600px; width:100%;"
           v-bind:data="getView" id="show_obj1" class="obj"></object>
@@ -81,6 +82,15 @@ export default {
         docs = this.document[0].document
       }
       return 'http://localhost:8000/file/assignment/' + docs.id
+    },
+    getIdentity () {
+      let identity
+      if (this.withPlagiarism === 'true') {
+        identity = this.document[0].document.practican
+      } else {
+        identity = this.document[0].practican
+      }
+      return identity.name + '/' + identity.identity
     }
   },
   destroyed () {

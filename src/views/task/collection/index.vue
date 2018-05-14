@@ -1,20 +1,46 @@
 <template>
+ 
  <div id="accordion" role="tablist" class="fadeIn animated row">
-  <div class="card col-md-12 col-sm-12" v-for="(document,index) in documents" :key="index">
-    <div class="card-header" role="tab" :id="'heading'+ index" v-on:click="setActiveDocument(Object.keys(document)[0])" >
-      <h5 class="mb-0">
-        <a :data-toggle="'collapse'+index" aria-expanded="true" :aria-controls="'collapse'+index">
-          {{ getPracticanName(document)}}
-        </a>
-      </h5>
-    </div>
-    <div :id="'collapse'+index" class="collapse animated fadeIn" 
-      v-bind:class="{show: active !== null && active == Object.keys(document)[0] }"
-    role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-      <div class="card-body">
+   <div class="col-md-12 col-sm-12">
+     <div class="card card-body">
+       <h3>Judul Tugas</h3>
+        <p>Deskripsi</p>
+        <p>Pengumpulan</p>
+        <ul>
+          <li>Tanggal 1</li> 
+          <li>Tanggal 2</li>
+        </ul>
+     </div>
+   </div>
+  <div class="col-md-12 col-sm-12 ">
+    <paginate-links class="" for="assignment-paginate" :limit="1" 
+      :show-step-links="true"
+      :classes="{
+        'ul': 'pagination',
+        '.next > a': 'page-link',
+        '.prev > a': 'page-link'
+    }"></paginate-links>
+  </div>
+  <paginate
+    name="assignment-paginate"
+    :list="documents"
+    :per="10"
+    tag="card"
+    class="col-md-12 col-sm-12"
+  >
+  <div v-for="(document,index) in paginated('assignment-paginate')">
+    
+    <div>
+      
         <div v-for="assignment in document">
-          <div class="row" style="padding:0px; margin:0px;">
-            <div class="card col-md-12" style="padding:50px;">
+          <div style="">
+            <div class="card ml-0 mr-0 col-md-12" >
+              <div class="pt-3">
+                <h5 class="mb-0">
+                  {{ getPracticanName(document)}}
+                </h5>
+              </div>
+              <div class="card-body p-4">
               <div class="row">
                 <p>Nama file : </p>
               </div>
@@ -54,15 +80,16 @@
               </div>
               <div class="row">
                 <div class="col-sm-12 col-md-12">
-                  <button class="btn btn-primary pull-right" v-on:click="setActiveViewer(assignment)">Lihat Dokumen</button>
+                  <button class="btn btn-primary pull-right" v-on:click="setActiveViewer(assignment)"><i class="fa fa-file"></i> Lihat Dokumen</button>
                  </div>
+              </div>
               </div>
             </div>
           </div> 
-        </div>
       </div>
     </div>
   </div>
+  </paginate>
   <div>
     <div v-if="activeViewer!=null">
       <document-viewer v-if="activeViewer[0].document.assignment.fileAllowed == 'document'" v-bind:document="activeViewer" withPlagiarism="true"
@@ -113,7 +140,8 @@ export default {
       switcher: {
         grade: null,
         gradeValue: 0
-      }
+      },
+      paginate: ['assignment-paginate']
     }
   },
   methods: {
@@ -124,7 +152,7 @@ export default {
     getDocumentByClassroom () {
       getDocumentByClassroomAPI(this.task, this.classroom)
         .then(response => {
-          this.documents = response.data
+          this.documents = Object.values(response.data)
         })
         .catch(error => {
           console.log(error)

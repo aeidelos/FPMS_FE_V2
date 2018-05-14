@@ -38,9 +38,14 @@
                                     </tr>
                                 </thead>
                                 <!---->
-                                <tbody class="">
                                     <!---->
-                                    <tr v-for="(course, index) in courses" aria-rowindex="" class="">
+                                    <paginate
+                                      name="course-paginate"
+                                      :list="courses"
+                                      :per="10"
+                                      tag="tbody"
+                                    >
+                                      <tr v-for="(course, index) in paginated('course-paginate')" aria-rowindex="" class="">
                                         <td aria-colindex="1" class="">{{ course.courseCode }}</td>
                                         <td aria-colindex="2" class="">{{ course.courseName }}</td>
                                         <td aria-colindex="3" class="">
@@ -49,10 +54,19 @@
                                         <td aria-colindex="4" class="">
                                         <button v-on:click="deletingCourse(index,course)"  class="btn btn-danger"><i class="fa fa-trash"></i>Hapus</button>
                                         </td>
-                                    </tr>
+                                      </tr>
+                                    </paginate>
                                     <!---->
                                     <!---->
-                                </tbody>
+                                    <tfoot>
+                                      <paginate-links class="" for="course-paginate" :limit="1" 
+                                      :show-step-links="true"
+                                      :classes="{
+                                        'ul': 'pagination',
+                                        '.next > a': 'page-link',
+                                        '.prev > a': 'page-link'
+                                      }"></paginate-links>
+                                    </tfoot>
                             </table>
                         </div>
                     </div>
@@ -84,7 +98,8 @@ export default {
       },
       temp: {
         selectedCourse: {}
-      }
+      },
+      paginate: ['course-paginate']
     }
   },
   methods: {

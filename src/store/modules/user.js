@@ -8,7 +8,10 @@ const user = {
       roles: {},
       name: '',
       identity: '',
-      id: ''
+      id: '',
+      email: '',
+      active: '',
+      photo: ''
     },
     token: '',
     dashboard: {}
@@ -21,6 +24,9 @@ const user = {
       state.SIGNED.name = user.name
       state.SIGNED.identity = user.identity
       state.SIGNED.id = user.id
+      state.SIGNED.email = user.email
+      state.SIGNED.active = user.active
+      state.SIGNED.photo = user.photo
     },
     SET_TEMP: (state, token) => {
       state.token = token

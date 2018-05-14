@@ -39,9 +39,14 @@
                                     </tr>
                                 </thead>
                                 <!---->
-                                <tbody class="">
+                                <paginate
+                                      name="practicum-paginate"
+                                      :list="practicums"
+                                      :per="10"
+                                      tag="tbody"
+                                    >
                                     <!---->
-                                    <tr v-for="(practicum, index) in practicums" aria-rowindex="" class="">
+                                    <tr v-for="(practicum, index) in paginated('practicum-paginate')" aria-rowindex="" class="">
                                         <td aria-colindex="1" class="">{{ practicum.course.courseName }}</td>
                                         <td aria-colindex="2" class="">{{ practicum.name }}</td>
                                         <td aria-colindex="3" class="" v-if="practicum.coordinatorAssistance==null">Belum ada Koordinator Asisten</td>
@@ -51,7 +56,16 @@
                                     </tr>
                                     <!---->
                                     <!---->
-                                </tbody>
+                                </paginate>
+                                <tfoot>
+                                    <paginate-links class="" for="practicum-paginate" :limit="1" 
+                                      :show-step-links="true"
+                                      :classes="{
+                                        'ul': 'pagination',
+                                        '.next > a': 'page-link',
+                                        '.prev > a': 'page-link'
+                                    }"></paginate-links>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -82,7 +96,8 @@ export default {
         editableMode: 'add',
         indexButton: '-99'
       },
-      selectedPracticum: {}
+      selectedPracticum: {},
+      paginate: ['practicum-paginate']
     }
   },
   methods: {

@@ -20,8 +20,8 @@
             </table>
           </div>
           <div class="card-footer">
-            <button class="btn btn-warning btn-sm pull-right" @click="closeViewer">Tutup</button>
-            <button class="btn btn-sm pull-right" @click="print()">Print</button> 
+            <button class="btn btn-warning btn-sm pull-right" style="margin-left:5px;" @click="closeViewer"><i class="fa fa-close"></i> Tutup</button>
+            <button class="btn btn-sm pull-right" @click="print()"><i class="fa fa-print"></i> Print</button> 
           </div>
         </div>
       </b-modal>

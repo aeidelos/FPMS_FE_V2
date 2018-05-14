@@ -1,13 +1,26 @@
 <template>
     <div class="animated fadeIn">
         <div class="col-sm-12 col-md-12 col-lg-12">
-            <div class="card border" style="min-height:450px;">
+            <div class="" style="min-height:450px;">
               <div v-if="classrooms.length <= 0 && role != 'coordinator'">
                 <resource-empty v-bind:title="title" style="min-height:450px;"></resource-empty>
               </div>
               <div v-else>
-                  <button v-if="role == 'coordinator'" v-on:click="addClassroom" style="margin-top:5px; margin-right:5px;" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Tambah Baru</button><br>
-                <div class="card-body" style="margin-top:10px;">
+                <b-row class="ml-2">
+                  <b-col align-self="start">
+                    <paginate-links class="mb-0" for="classroom-paginate" :limit="1" 
+                    :show-step-links="true"
+                    :classes="{
+                    'ul': 'pagination',
+                    '.next > a': 'page-link',
+                    '.prev > a': 'page-link'
+                   }"></paginate-links>
+                  </b-col>
+                  <b-col align-self="end" class="mr-4">
+                    <button v-if="role == 'coordinator'" v-on:click="addClassroom" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Tambah Baru</button><br>
+                  </b-col>
+                </b-row>
+                <div class="card-body">
                     <div v-if="switcher.announcement == 'on'" >
                       <announcement  v-on:closediv="switcher.announcement = 'off'; temp.selectedClassroom = null;"
                        v-bind:classroom="temp.selectedClassroom"></announcement>
@@ -22,7 +35,13 @@
                       <div v-if="switcher.editableMode=='edit'"><editable-classroom v-bind:role = "role" v-bind:classroom="temp.selectedClassroom" act='edit' v-on:closediv="switchEditableClassroom" v-on:changelist="updateClassroomList"></editable-classroom></div>
                       <div v-if="switcher.editableMode=='delete'"><editable-classroom v-bind:role = "role" v-bind:classroom="temp.selectedClassroom" act='delete' v-on:closediv="switchEditableClassroom" v-on:changelist="updateClassroomList"></editable-classroom></div>
                     </div>
-                    <div  v-for="classroom in classrooms"  class="card border">
+                    <paginate
+                      name="classroom-paginate"
+                      :list="classrooms"
+                      :per="10"
+                      tag="div"
+                    >
+                    <div  v-for="classroom in paginated('classroom-paginate')"  class="card border">
                         <div class="card-body container">
                             <div class="row">
                                 <div class="col-md-6">
@@ -57,12 +76,14 @@
                               </div>
                               <br>
                               <div>
-                                 <button v-if="role == 'assistance'" style="margin-right:3px;" class="btn btn-md btn-primary pull-left" @click="activeAnnouncement(classroom)">Pengumuman</button>
-                                 <button style="margin-right:3px;" class="btn btn-md btn-success pull-left" @click="switchToNextRouteClassroom(classroom)">Tugas & Laporan</button>
-                                 <button v-if="role == 'assistance' || role== 'coordinator'"style="margin-right:3px;" class="btn btn-md btn-success pull-left" @click="exportGrade(classroom)">Rekap Nilai</button>
+                                 <button v-if="role == 'assistance'" style="margin-right:3px;" class="btn btn-md btn-primary pull-left" @click="activeAnnouncement(classroom)"><i class="fa fa-bullhorn"></i> Pengumuman</button>
+                                 <button style="margin-right:3px;" class="btn btn-md btn-success pull-left" @click="switchToNextRouteClassroom(classroom)"><i class="fa fa-tasks"></i> Tugas & Laporan</button>
+                                 <button v-if="role == 'assistance' || role== 'coordinator'"style="margin-right:3px;" class="btn btn-md btn-success pull-left" @click="exportGrade(classroom)"><i class="fa fa-list-alt"></i> Rekap Nilai</button>
+                                 <button v-if="role == 'assistance' || role== 'coordinator'"style="margin-right:3px;" class="btn btn-md btn-success pull-right" ><i class="fa fa-list-alt"></i> Rekap Nilai</button>
                               </div>
                             </div>
                     </div>
+                    </paginate>
                 </div>
               </div>
             </div>
@@ -119,7 +140,8 @@ export default {
         announcement: 'off',
         gradeExport: 'off'
       },
-      title: ''
+      title: '',
+      paginate: ['classroom-paginate']
     }
   },
   methods: {

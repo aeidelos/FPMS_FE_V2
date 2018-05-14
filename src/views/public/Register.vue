@@ -1,5 +1,5 @@
 <template>
-  <div class="app flex-row align-items-center">
+  <div class="app flex-row align-items-center register-area">
     <div class="container">
       <b-row class="justify-content-center">
         <b-col md="6">
@@ -60,9 +60,9 @@
                         <div class="row text-center">
                             <div class="col-sm-12 ">
                                 <div class="form-group form-actions ">
-                                    <button type="button" class="btn btn-danger" @click="$router.push('/public/login')">Batal</button>
+                                    <button type="button" class="btn btn-danger" @click="$router.push('/public/login')"> <i class="fa fa-close"></i> Batal</button>
                                     <button v-if="checkPasswordConfirmed && checkFormNotBlank" 
-                                    @click="register" type="button" class="btn btn-primary">Submit</button>
+                                    @click="register" type="button" class="btn btn-primary"><i class="fa fa-save"></i> Registrasi</button>
                                 </div>
                             </div>
                         </div>
@@ -135,3 +135,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .register-area {
+    background: linear-gradient(to bottom right, #5894f4, rgb(230, 230, 218));
+  }
+</style>

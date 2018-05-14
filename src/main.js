@@ -12,8 +12,10 @@ import vSelect from 'vue-select'
 import wysiwyg from 'vue-wysiwyg'
 import DatePicker from 'vue2-datepicker'
 import VueHighlightJS from 'vue-highlightjs'
+import VuePaginate from 'vue-paginate'
 
 Vue.use(VueHighlightJS)
+Vue.use(VuePaginate)
 Vue.use(VueAxios, axios, VueAlertify)
 Vue.use(BootstrapVue)
 Vue.use(wysiwyg, {})

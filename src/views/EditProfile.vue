@@ -38,7 +38,7 @@
                         <div class="row text-center">
                             <div class="col-sm-12 ">
                                 <div class="form-group form-actions ">
-                                    <button type="submit" @click="updateProfile()" class="btn btn-primary">Submit</button>
+                                    <button type="submit" @click="updateProfile()" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
                                 </div>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                                 <fieldset id="__BVID__200" role="group" class="b-form-group form-group">
                                     <div role="group" class="">
                                         <label for="oldPasword">Password lama</label> 
-                                        <input id="oldPasword" type="password" placeholder="Masukkan nama anda" class="form-control">
+                                        <input id="oldPasword" type="password" placeholder="Masukkan Password Lama" class="form-control">
                                     </div>
                                 </fieldset>
                             </div>
@@ -64,7 +64,7 @@
                                 <fieldset id="__BVID__201" role="group" class="b-form-group form-group">
                                     <div role="group" class="">
                                         <label for="newPassword">Password baru</label> 
-                                        <input id="newPassword" type="password" placeholder="Masukkan NIM" class="form-control">
+                                        <input id="newPassword" type="password" placeholder="Masukkan Password Baru" class="form-control">
                                     </div>
                                 </fieldset>
                             </div>
@@ -74,7 +74,7 @@
                                 <fieldset id="__BVID__202" role="group" class="b-form-group form-group">
                                     <div role="group" class="">
                                         <label for="confirmPassword">Konfirmasi password</label> 
-                                        <input id="confirmPassword" type="password" placeholder="Masukkan Jurusan" class="form-control">
+                                        <input id="confirmPassword" type="password" placeholder="Masukkan Ulang Password" class="form-control">
                                     </div>
                                 </fieldset>
                             </div>
@@ -82,7 +82,7 @@
                         <div class="row text-center">
                             <div class="col-sm-12 ">
                                 <div class="form-group form-actions ">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
                                 </div>
                             </div>
                         </div>

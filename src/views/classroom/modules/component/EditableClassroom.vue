@@ -73,7 +73,7 @@
             <div class="card-footer">
                 <div><button v-if="mode == 'add'" v-on:click="addClassroom" type="submit" class="btn btn-success btn-sm"><i class="fa fa-plus-square"></i> Tambahkan</button>
                 <button v-if="mode == 'edit'" v-on:click="updateClassroom" type="submit" class="btn btn-success btn-sm"><i class="fa fa-save"></i> Simpan</button>
-                <button v-if="mode == 'delete'" v-on:click="deleteClassroom" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-minus-circle"></i> Hapus</button>
+                <button v-if="mode == 'delete'" v-on:click="deleteClassroom" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-minus-circle"> </i> Hapus</button>
                 <button class="btn btn-sm" v-on:click="closediv"><i class="fa fa-ban"></i> Batal</button></div>
             </div>
         </div>

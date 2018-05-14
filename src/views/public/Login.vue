@@ -18,7 +18,7 @@
                 </b-input-group>
                 <b-row>
                   <b-col cols="6">
-                    <b-button variant="primary" class="px-4" v-on:click="login">Login</b-button>
+                    <b-button variant="primary" class="px-4" v-on:click="login"><i class="fa fa-sign-in"></i> Login</b-button>
                   </b-col>
                   <b-col cols="6" class="text-right">
                     <b-button variant="link" class="px-0"></b-button>
@@ -29,9 +29,9 @@
             <b-card no-body class="text-white bg-primary py-5 d-md-down-none" style="width:44%">
               <b-card-body class="text-center">
                 <div>
-                  <h2>Sign up</h2>
+                  <h2> Registrasi</h2>
                   <p>Silahkan mendaftar untuk mengakses sistem.</p>
-                  <b-button variant="primary" class="active mt-3"@click="$router.push('/public/register')">Register Now!</b-button>
+                  <b-button variant="primary" class="active mt-3"@click="$router.push('/public/register')"><i class="fa fa-user-plus"></i> Register Now!</b-button>
                 </div>
               </b-card-body>
             </b-card>

@@ -17,14 +17,14 @@
                                 <div v-if="switcher.upload == 'on'" class="attachment-content">
                                     <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-if="getFileSingleOrMultiple" multiple type="file" v-on:change="fileChange">
                                     <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-else type="file" v-on:change="fileChange">
-                                    <button class="btn btn-primary btn-sm" v-on:click="fileUpload">Upload</button>
+                                    <button class="btn btn-primary btn-sm" v-on:click="fileUpload"><i class="fa fa-upload"></i> Upload</button>
                                     <button class="btn btn-danger btn-sm" v-if="document.length>0"
-                                    v-on:click="switcher.upload = 'off'">Batal</button>
-                                    <button class="btn btn-warning btn-sm" v-on:click="closeView" >Tutup</button>
+                                    v-on:click="switcher.upload = 'off'"><i class="fa fa-ban"></i> Batal</button>
+                                    <button class="btn btn-warning btn-sm" v-on:click="closeView" ><i class="fa fa-close"></i> Tutup</button>
                                   </div>
                                   <div v-else>
-                                      <button class="btn btn-success" v-on:click="fileView(document)">Lihat</button>
-                                      <button class="btn btn-primary" v-if="isNotLate" v-on:click="switcher.upload = 'on'">Unggah Berkas</button>
+                                      <button class="btn btn-success" v-on:click="fileView(document)"><i class="fa fa-file"></i> Lihat</button>
+                                      <button class="btn btn-primary" v-if="isNotLate" v-on:click="switcher.upload = 'on'"><i class="fa fa-cloud-upload"></i> Unggah Berkas</button>
                                   </div>
                               </div>
                             </div>
@@ -109,7 +109,7 @@
         if (ext === 'document') {
           return '.doc,.docx,.pdf'
         } else if (ext === 'sourcecode') {
-          return '.java,.php,.txt,.py'
+          return '.java'
         }
       },
       getFileSingleOrMultiple () {

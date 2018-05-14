@@ -4,6 +4,7 @@
     hide-footer hide-header no-close-on-backdrop>
       <div class="row">
         <div class="col-md-12 col-sm-12">
+          <p>Nama/NIM Mahasiswa : {{ getIdentity }}</p>
           <ul class="nav nav-tabs">
             <li v-for="content in getHighlighted" class="nav-item">
               <a class="nav-link" v-on:click="setSwitcherData(content)"
@@ -120,6 +121,15 @@ export default {
     },
     getCodeResult () {
       return this.codeResult.result !== '' && this.codeResult.result !== null ? this.codeResult.result : this.codeResult.log
+    },
+    getIdentity () {
+      let identity
+      if (this.withPlagiarism === 'true') {
+        identity = this.document[0].document.practican
+      } else {
+        identity = this.document[0].practican
+      }
+      return identity.name + '/' + identity.identity
     }
   }
 }
