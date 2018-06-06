@@ -34,3 +34,12 @@ export function successAlert (message) {
     confirmButtonText: 'Ok'
   })
 }
+
+export function infoAlert (message) {
+  return swal({
+    title: 'Informasi',
+    text: message,
+    type: 'info',
+    confirmButtonText: 'Ok'
+  })
+}

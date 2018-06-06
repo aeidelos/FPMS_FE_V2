@@ -1,14 +1,19 @@
 <template>
- 
- <div id="accordion" role="tablist" class="fadeIn animated row">
+  <div v-if="loading" class="center-loader">
+    <half-circle-spinner
+      :animation-duration="1000"
+      :size="90"
+      color="#ff1d5e"
+    />
+  </div>
+ <div v-else id="accordion" role="tablist" class="fadeIn animated row">
    <div class="col-md-12 col-sm-12">
      <div class="card card-body">
-       <h3>Judul Tugas</h3>
-        <p>Deskripsi</p>
+       <h3><i class="fa fa-bookmark"></i> {{ task.title }}</h3>
+        <p><i class="fa fa-notes"></i><span v-html="task.description"></span></p>
         <p>Pengumpulan</p>
         <ul>
-          <li>Tanggal 1</li> 
-          <li>Tanggal 2</li>
+          <li v-for="assignment in task.assignments">{{ assignment.description }}</li>
         </ul>
      </div>
    </div>
@@ -29,17 +34,15 @@
     class="col-md-12 col-sm-12"
   >
   <div v-for="(document,index) in paginated('assignment-paginate')">
-    
-    <div>
-      
+    <div class="card">
+        <div class="p-3">
+          <h5 class="mb-0">
+          {{ getPracticanName(document)}}
+          </h5>
+        </div>
         <div v-for="assignment in document">
           <div style="">
             <div class="card ml-0 mr-0 col-md-12" >
-              <div class="pt-3">
-                <h5 class="mb-0">
-                  {{ getPracticanName(document)}}
-                </h5>
-              </div>
               <div class="card-body p-4">
               <div class="row">
                 <p>Nama file : </p>
@@ -51,7 +54,10 @@
                     <span v-if="file.document.markAsPlagiarized" class="badge badge-danger">
                       terplagiasi
                     </span>
-                    <span v-if="file.plagiarism.rate>=50" class="badge badge-warning">
+                    <span v-if="file.plagiarism == null" class="badge badge-primary">
+                      similarity = processing
+                    </span>
+                    <span v-else-if="file.plagiarism.rate>=50" class="badge badge-warning">
                       similarity = {{ file.plagiarism.rate.toFixed(2) }}
                     </span>
                     <span v-else-if="file.plagiarism.rate<50" class="badge badge-primary">
@@ -101,17 +107,27 @@
 </div>
 </template>
 
+<style lang="scss" scoped>
+  .center-loader {
+    margin-top: 20%;
+    margin-left: 45%;
+  }
+  
+</style>
+
 
 <script>
 import { getDocumentByClassroom as getDocumentByClassroomAPI, setGrade as setGradeAPI, setPlagiarized } from '@/api/assignment'
 import CodeViewer from './../modules/viewer/CodeViewer'
 import DocumentViewer from './../modules/viewer/DocumentViewer'
-import { successAlert, warningAlert } from '@/utils/alert'
+import { successAlert, warningAlert, infoAlert } from '@/utils/alert'
+import { HalfCircleSpinner } from 'epic-spinners'
 export default {
   name: 'classroom-practicum',
   components: {
     CodeViewer,
-    DocumentViewer
+    DocumentViewer,
+    HalfCircleSpinner
   },
   props: {
     classroom: {
@@ -141,8 +157,14 @@ export default {
         grade: null,
         gradeValue: 0
       },
-      paginate: ['assignment-paginate']
+      paginate: ['assignment-paginate'],
+      loading: true
     }
+  },
+  created () {
+    setTimeout(() => {
+      this.loading = false
+    }, 300)
   },
   methods: {
     getFileName (longName) {
@@ -156,7 +178,7 @@ export default {
         })
         .catch(error => {
           console.log(error)
-          warningAlert('Belum ada yang mengumpulkan dokumen')
+          infoAlert('Belum ada yang mengumpulkan dokumen')
         })
     },
     filterName (filename) {

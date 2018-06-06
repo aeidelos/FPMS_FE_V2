@@ -1,5 +1,12 @@
 <template>
-    <div class="fadeIn">
+    <div v-if="loading" class="center-loader">
+      <half-circle-spinner
+        :animation-duration="1000"
+        :size="30"
+        color="#ff1d5e"
+      />
+    </div>
+    <div v-else class="fadeIn">
         <div class="card card-primary">
             <div class="card-body col-sm-12">
                 <div>
@@ -15,9 +22,12 @@
                               </div>
                               <div class="col-md-12">
                                 <div v-if="switcher.upload == 'on'" class="attachment-content">
-                                    <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-if="getFileSingleOrMultiple" multiple type="file" v-on:change="fileChange">
-                                    <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-else type="file" v-on:change="fileChange">
-                                    <button class="btn btn-primary btn-sm" v-on:click="fileUpload"><i class="fa fa-upload"></i> Upload</button>
+                                    <span v-if="isNotLate">
+                                      <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-if="getFileSingleOrMultiple" multiple type="file" v-on:change="fileChange">
+                                      <input class="btn btn-default btn-sm" v-bind:accept="getFileAccepted" v-else type="file" v-on:change="fileChange">
+                                      <button class="btn btn-primary btn-sm" v-on:click="fileUpload"><i class="fa fa-upload"></i> Upload</button>
+                                    </span>
+                                    <span v-else> <span>Tugas sudah tidak dapat diunggah.</span> </span>
                                     <button class="btn btn-danger btn-sm" v-if="document.length>0"
                                     v-on:click="switcher.upload = 'off'"><i class="fa fa-ban"></i> Batal</button>
                                     <button class="btn btn-warning btn-sm" v-on:click="closeView" ><i class="fa fa-close"></i> Tutup</button>
@@ -48,16 +58,18 @@
   .attachment-title {
     margin-bottom: 10px;
   }
+  
 </style>
-
 
 <script>
   import { getAssignmentInformation as getAssignmentInformationAPI,
     uploadAssignment as uploadAssignmentAPI } from '@/api/assignment'
   import { warningAlert, successAlert } from '@/utils/alert'
+  import { HalfCircleSpinner } from 'epic-spinners'
   export default {
     name: 'upload-task',
-    component: {
+    components: {
+      HalfCircleSpinner
     },
     props: {
       assignment: {
@@ -90,9 +102,15 @@
           })
       }
     },
+    created () {
+      setTimeout(() => {
+        this.loading = false
+      }, 300)
+    },
     data () {
       return {
         temp: {},
+        loading: true,
         emitter: {},
         file: [],
         document: [],

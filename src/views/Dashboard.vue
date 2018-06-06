@@ -83,7 +83,7 @@
                 <hr class="">
                 <p>Daftar tugas praktikum yang harus dikumpulkan dalam 24 jam yang akan datang.</p>
                 <ul class="icons-list">
-                  <div v-if="dashboard.task.length == 0">
+                  <div v-if="dashboard.task == null || dashboard.task.length == 0">
                     <li><i class="icon-notebook bg-default"></i>
                       <div class="desc">
                         <div class="title">Tidak ada tugas aktif</div>
@@ -103,7 +103,7 @@
                       </div>
                       <div class="value">
                         <div class="small text-muted">Sisa waktu</div>
-                        <strong>3 Jam</strong>
+                        <strong>{{ getDifferenceTime(task.dueDate) }}</strong>
                       </div>
                     </li>  
                   </div>                  
@@ -154,6 +154,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { getDashboard as getDashboardAPI } from '@/api/assignment'
 import { getByEnrollmentKey, updateClassroom } from '@/api/classroom'
 import { confirmationAlert, successAlert, warningAlert } from '@/utils/alert'
@@ -185,7 +186,13 @@ export default {
     getDashboard () {
       getDashboardAPI(this.user)
         .then(response => {
-          this.dashboard = response.data
+          if (response.status === 200) {
+            this.dashboard = response.data
+            return this.dashboard
+          }
+        })
+        .catch(error => {
+          console.log(error)
         })
     }
   },
@@ -196,6 +203,15 @@ export default {
     }
   },
   methods: {
+    getDifferenceTime (origin) {
+      let time = moment(origin, 'dd-mm-yyyy HH:mm:ss')
+      let now = moment()
+      let duration = moment.duration(now.diff(time))
+      let minutes = duration.asMinutes()
+      let hour = minutes / 60
+      let minuteLeft = minutes % 60
+      return Math.floor(hour) + ' Jam ' + Math.floor(minuteLeft) + ' Menit'
+    },
     dashboardState (role) {
       var permitted = false
       Object(this.user.roles).forEach(r => {

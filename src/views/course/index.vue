@@ -1,6 +1,13 @@
 <template>
     <div class="animated fadeIn">
-        <div class="col-sm-12 col-md-12 col-lg-12">
+        <div v-if="loading" class="center-loader">
+          <half-circle-spinner
+            :animation-duration="1000"
+            :size="90"
+            color="#ff1d5e"
+          />
+        </div>
+        <div v-else class="col-sm-12 col-md-12 col-lg-12">
             <div class="card border">
                 <div class="card-header">
                     <div>
@@ -76,19 +83,33 @@
     </div>
 </template>
 
+<style lang="scss" scoped>
+  .center-loader {
+    margin-left: 40%;
+    margin-top: 20%;
+  }
+</style>
+
+
 <script>
 import EditableCourse from './EditableCourse'
+import { HalfCircleSpinner } from 'epic-spinners'
 import { getAllCourses } from '@/api/course'
 export default {
   name: 'list-course',
   components: {
-    EditableCourse
+    EditableCourse,
+    HalfCircleSpinner
   },
   mounted () {
     this.getCourses()
+    setTimeout(() => {
+      this.loading = false
+    }, 300)
   },
   data () {
     return {
+      loading: true,
       courses: {},
       switcher: {
         addingButton: 'on',

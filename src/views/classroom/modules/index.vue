@@ -1,5 +1,12 @@
 <template>
-    <div class="animated fadeIn">
+    <div v-if="loading" class="center-loader">
+      <half-circle-spinner
+        :animation-duration="1000"
+        :size="90"
+        color="#ff1d5e"
+      />
+    </div>
+    <div v-else class="animated fadeIn">
         <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="" style="min-height:450px;">
               <div v-if="classrooms.length <= 0 && role != 'coordinator'">
@@ -29,6 +36,9 @@
                       <grade-export v-bind:classroom="temp.selectedClassroom" v-bind:grades="temp.grades"
                       v-on:closediv="switcher.gradeExport = 'off'; temp.selectedClassroom=null;temp.grades = null;"
                       ></grade-export>
+                    </div>
+                    <div v-if="switcher.listPractican == 'on'">
+                      <list-practican v-bind:classroom="temp.selectedClassroom" v-on:closediv="switcher.listPractican='off'"></list-practican>
                     </div>
                     <div v-if="switcher.editableClassroom == 'on'">
                       <div v-if="switcher.editableMode=='add'"><editable-classroom  v-bind:role = "role" v-bind:practicum="practicum" v-on:closediv="switchEditableClassroom" v-on:changelist="updateClassroomList" act='add'></editable-classroom></div>
@@ -76,10 +86,10 @@
                               </div>
                               <br>
                               <div>
-                                 <button v-if="role == 'assistance'" style="margin-right:3px;" class="btn btn-md btn-primary pull-left" @click="activeAnnouncement(classroom)"><i class="fa fa-bullhorn"></i> Pengumuman</button>
+                                 <button v-if="role == 'assistance'" style="margin-right:3px;" class="btn btn-md btn-primary pull-left" @click="activeAnnouncement(classroom)" hidden><i class="fa fa-bullhorn"></i> Pengumuman</button>
                                  <button style="margin-right:3px;" class="btn btn-md btn-success pull-left" @click="switchToNextRouteClassroom(classroom)"><i class="fa fa-tasks"></i> Tugas & Laporan</button>
-                                 <button v-if="role == 'assistance' || role== 'coordinator'"style="margin-right:3px;" class="btn btn-md btn-success pull-left" @click="exportGrade(classroom)"><i class="fa fa-list-alt"></i> Rekap Nilai</button>
-                                 <button v-if="role == 'assistance' || role== 'coordinator'"style="margin-right:3px;" class="btn btn-md btn-success pull-right" ><i class="fa fa-list-alt"></i> Rekap Nilai</button>
+                                 <button v-if="role == 'assistance' || role== 'coordinator'" style="margin-right:3px;" class="btn btn-md btn-success pull-left" @click="exportGrade(classroom)"><i class="fa fa-list-alt"></i> Rekap Nilai</button>
+                                 <button style="margin-right:3px;" class="btn btn-md btn-primary pull-right" @click="switchListPractican(classroom)" ><i class="fa fa-users"></i> Peserta Kelas</button>
                               </div>
                             </div>
                     </div>
@@ -91,11 +101,22 @@
     </div>
 </template>
 
+<style lang="scss" scoped>
+  .center-loader {
+    margin-top: 20%;
+    margin-left: 45%;
+  }
+  
+</style>
+
+
 <script>
 import EditableClassroom from './component/EditableClassroom'
 import ResourceEmpty from '@/components/ResourceEmpty'
 import Announcement from './component/Announcement'
 import GradeExport from './component/GradeExport'
+import ListPractican from './component/ListPractican'
+import { HalfCircleSpinner } from 'epic-spinners'
 import { getExportedGrade } from '@/api/assignment'
 export default {
   name: 'classroom',
@@ -103,7 +124,9 @@ export default {
     EditableClassroom,
     ResourceEmpty,
     Announcement,
-    GradeExport
+    GradeExport,
+    ListPractican,
+    HalfCircleSpinner
   },
   props: {
     classrooms: {
@@ -119,6 +142,11 @@ export default {
       required: false
     }
   },
+  created () {
+    setTimeout(() => {
+      this.loading = false
+    }, 300)
+  },
   mounted () {
     if (this.role === 'assistance') {
       this.title = 'Anda belum menjadi asisten'
@@ -130,6 +158,7 @@ export default {
   },
   data () {
     return {
+      loading: true,
       temp: {
         selectedClassroom: {},
         grades: {}
@@ -138,7 +167,8 @@ export default {
         editableClassroom: 'off',
         editableMode: 'add',
         announcement: 'off',
-        gradeExport: 'off'
+        gradeExport: 'off',
+        listPractican: 'off'
       },
       title: '',
       paginate: ['classroom-paginate']
@@ -158,6 +188,15 @@ export default {
         this.switcher.editableClassroom = 'on'
       } else {
         this.switcher.editableClassroom = 'off'
+      }
+    },
+    switchListPractican (classroom) {
+      if (this.switcher.listPractican === 'off') {
+        this.switcher.listPractican = 'on'
+        this.temp.selectedClassroom = classroom
+      } else {
+        this.switcher.listPractican = 'off'
+        this.temp.selectedClassroom = {}
       }
     },
     addClassroom () {

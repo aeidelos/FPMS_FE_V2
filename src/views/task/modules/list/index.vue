@@ -1,6 +1,13 @@
 <template>
     <div class="animated fadeIn">
-        <div class="col-sm-12 col-md-12 col-lg-12">
+      <div v-if="loading" class="center-loader">
+        <half-circle-spinner
+          :animation-duration="1000"
+          :size="90"
+          color="#ff1d5e"
+        />
+      </div>
+      <div v-else class="col-sm-12 col-md-12 col-lg-12">
             <div class="card border" style="min-height:450px;">
                 <div class="card-body">
                       <button v-if="role == 'assistance' || role == 'coordinator'" class="btn btn-primary pull-right" v-on:click="switchAddTask"><i class="fa fa-plus"></i>Tambah Baru</button>
@@ -46,7 +53,12 @@
                                       <div class="col-sm-4">
                                         <button v-if="role != 'practican' && isTheCreator(task) == true" v-on:click="switchDeleteTask(task)" class="btn btn-danger pull-right"><i class="fa fa-close">Hapus</i></button>
                                         <button v-if="role != 'practican' && isTheCreator(task) == true" v-on:click="switchEditTask(task)" class="btn pull-right"><i class="fa fa-edit"></i>Sunting</button>
-                                        <h5 v-else class="pull-right"><span class="badge badge-md badge-success"><i class="fa fa-clock-o"></i> 7 Jam 50 Menit</span></h5>
+                                        <h5 v-else class="pull-right">
+                                          <span v-if="isNotLate(task)" class="badge badge-md badge-success"><i class="fa fa-clock-o"></i> {{ getDifferenceTime(task.dueDate) }}
+                                          </span>
+                                          <span v-else class="badge badge-md badge-danger"><i class="fa fa-clock-o"></i> {{ getDifferenceTime(task.dueDate) }}
+                                          </span>
+                                        </h5>
                                       </div>
                                     </div>
                                     <div style="margin-left:30px">
@@ -136,6 +148,15 @@
     </div>
 </template>
 
+<style lang="scss" scoped>
+  .center-loader {
+    margin-top: 20%;
+    margin-left: 45%;
+  }
+  
+</style>
+
+
 <script>
 import moment from 'moment'
 import EditableTask from './EditableTask'
@@ -143,6 +164,7 @@ import UploaderTask from './../upload'
 import CodeViewer from './../viewer/CodeViewer'
 import DocumentViewer from './../viewer/DocumentViewer'
 import CorrectorList from './../corrector'
+import { HalfCircleSpinner } from 'epic-spinners'
 export default {
   name: 'list-task',
   components: {
@@ -150,7 +172,8 @@ export default {
     UploaderTask,
     CodeViewer,
     DocumentViewer,
-    CorrectorList
+    CorrectorList,
+    HalfCircleSpinner
   },
   props: {
     tasks: {
@@ -181,8 +204,14 @@ export default {
   },
   mounted () {
   },
+  created () {
+    setTimeout(() => {
+      this.loading = false
+    }, 300)
+  },
   data () {
     return {
+      loading: true,
       activeTasks: null,
       switcher: {
         editableTask: 'off',
@@ -215,6 +244,17 @@ export default {
         this.$refs.paginator.goToPage(1)
       }
     },
+    getDifferenceTime (origin) {
+      let time = moment(origin, 'dd-mm-yyyy HH:mm:ss')
+      let now = moment()
+      let duration = moment.duration(time.diff(now))
+      let minutes = duration.asMinutes()
+      let hour = minutes / 60
+      let day = duration.asDays()
+      let minuteLeft = minutes % 60
+      let late = new Date() <= time.toDate() ? 'Terlambat ' : ''
+      return late + Math.abs(Math.floor(day)) + ' Hari ' + Math.abs(Math.floor(hour)) + ' Jam ' + Math.abs(Math.floor(minuteLeft)) + ' Menit'
+    },
     viewDocument (document) {
       this.activeViewer.data = document
       this.switcher.viewer = 'on'
@@ -223,7 +263,7 @@ export default {
       if (task.allowLate === true) {
         return true
       } else {
-        let date = moment(task.dueDate, 'DD-MM-YYYY hh:mm:ss').toDate()
+        let date = moment(task.dueDate, 'DD-MM-YYYY HH:mm:ss').toDate()
         let late = new Date() <= date
         return late
       }

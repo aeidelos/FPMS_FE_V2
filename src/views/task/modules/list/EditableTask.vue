@@ -170,8 +170,8 @@
         this.task.assignments.splice(index, 1)
       },
       assignmentDatePicker () {
-        this.task.createdDate = moment(this.temp.selectedDate[0]).format('DD-MM-YYYY hh:mm:ss')
-        this.task.dueDate = moment(this.temp.selectedDate[1]).format('DD-MM-YYYY hh:mm:ss')
+        this.task.createdDate = moment(this.temp.selectedDate[0]).format('DD-MM-YYYY HH:mm:ss')
+        this.task.dueDate = moment(this.temp.selectedDate[1]).format('DD-MM-YYYY HH:mm:ss')
       },
       addTask () {
         // required validation (to be implemented)

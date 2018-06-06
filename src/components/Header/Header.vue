@@ -32,7 +32,7 @@
     },
     methods: {
       getUserAndStudy (identity) {
-        if (identity.substring(2, 5) === '5150') return 'Informatika'
+        if (identity.substring(2, 6) === '5150') return 'Teknik Informatika'
         else return ' - '
       },
       sidebarToggle (e) {

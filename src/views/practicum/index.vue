@@ -1,6 +1,13 @@
 <template>
     <div class="animated fadeIn">
-        <div class="col-sm-12 col-md-12 col-lg-12">
+        <div v-if="loading" class="center-loader">
+          <half-circle-spinner
+            :animation-duration="1000"
+            :size="90"
+            color="#ff1d5e"
+          />
+        </div>
+        <div v-else class="col-sm-12 col-md-12 col-lg-12">
             <div class="card border">
                 <div class="card-header">
                     <div>
@@ -75,21 +82,33 @@
     </div>
 </template>
 
+<style lang="scss" scoped>
+  .center-loader {
+    margin-left: 40%;
+    margin-top: 20%;
+  }
+</style>
+
 <script>
 import { getAllPracticum as getAllPracticumAPI } from '@/api/practicum'
-
+import { HalfCircleSpinner } from 'epic-spinners'
 import EditablePracticum from './EditablePracticum'
 
 export default {
   name: 'list-practicum',
   components: {
-    EditablePracticum
+    EditablePracticum,
+    HalfCircleSpinner
   },
-  mounted () {
+  async mounted () {
     this.getAllPracticum()
+    setTimeout(() => {
+      this.loading = false
+    }, 300)
   },
   data () {
     return {
+      loading: true,
       practicums: {},
       switcher: {
         editablePracticum: 'off',

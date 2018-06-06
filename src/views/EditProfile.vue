@@ -1,5 +1,12 @@
 <template>
-    <div class=" edit-profil animated fadeIn">
+    <div v-if="loading" class="center-loader">
+      <half-circle-spinner
+        :animation-duration="1000"
+        :size="90"
+        color="#ff1d5e"
+      />
+    </div>
+    <div v-else class=" edit-profil animated fadeIn">
       <div class="row">
         <div class="col-sm-12 col-md-8 col-lg-8">
             <div class="card">
@@ -93,18 +100,35 @@
     </div>
 </template>
 
+<style lang="scss" scoped>
+  .center-loader {
+    margin-top: 20%;
+    margin-left: 45%;
+  }
+</style>
+
 <script>
 import { update as updateAPI } from '@/api/user'
 import { successAlert, warningAlert } from '@/utils/alert'
+import { HalfCircleSpinner } from 'epic-spinners'
 export default {
   name: 'edit-profil',
   mounted () {
     this.user = this.$store.getters.user
   },
+  components: {
+    HalfCircleSpinner
+  },
   data () {
     return {
+      loading: true,
       user: {}
     }
+  },
+  created () {
+    setTimeout(() => {
+      this.loading = false
+    }, 300)
   },
   computed: {
     isValidUser () {
